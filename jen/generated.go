@@ -1303,53 +1303,27 @@ func (s *Statement) Recover() *Statement {
 }
 
 // Exists renders the exists quantifier.
-func Exists(args ...Code) *Statement {
-	return newStatement().Exists(args...)
+func Exists(varDecls Code, formula1 Code, formula2 Code) *Statement {
+	return newStatement().Exists(varDecls, formula1, formula2)
 }
 
 // Exists renders the exists quantifier.
-func (g *Group) Exists(args ...Code) *Statement {
-	s := Exists(args...)
+func (g *Group) Exists(varDecls Code, formula1 Code, formula2 Code) *Statement {
+	s := Exists(varDecls, formula1, formula2)
 	g.items = append(g.items, s)
 	return s
 }
 
 // Exists renders the exists quantifier.
-func (s *Statement) Exists(args ...Code) *Statement {
+func (s *Statement) Exists(varDecls Code, formula1 Code, formula2 Code) *Statement {
 	g := &Group{
 		close:     ")",
-		items:     args,
+		items:     []Code{varDecls, formula1, formula2},
 		multi:     true,
 		name:      "exists",
 		open:      "exists(",
-		separator: "",
+		separator: " | ",
 	}
-	*s = append(*s, g)
-	return s
-}
-
-// ExistsFunc renders the exists quantifier.
-func ExistsFunc(f func(*Group)) *Statement {
-	return newStatement().ExistsFunc(f)
-}
-
-// ExistsFunc renders the exists quantifier.
-func (g *Group) ExistsFunc(f func(*Group)) *Statement {
-	s := ExistsFunc(f)
-	g.items = append(g.items, s)
-	return s
-}
-
-// ExistsFunc renders the exists quantifier.
-func (s *Statement) ExistsFunc(f func(*Group)) *Statement {
-	g := &Group{
-		close:     ")",
-		multi:     true,
-		name:      "exists",
-		open:      "exists(",
-		separator: "",
-	}
-	f(g)
 	*s = append(*s, g)
 	return s
 }
@@ -1402,6 +1376,32 @@ func (s *Statement) SetFunc(f func(*Group)) *Statement {
 		separator: ",",
 	}
 	f(g)
+	*s = append(*s, g)
+	return s
+}
+
+// Any renders an any expression.
+func Any(varDecls Code, formula Code, expression Code) *Statement {
+	return newStatement().Any(varDecls, formula, expression)
+}
+
+// Any renders an any expression.
+func (g *Group) Any(varDecls Code, formula Code, expression Code) *Statement {
+	s := Any(varDecls, formula, expression)
+	g.items = append(g.items, s)
+	return s
+}
+
+// Any renders an any expression.
+func (s *Statement) Any(varDecls Code, formula Code, expression Code) *Statement {
+	g := &Group{
+		close:     ")",
+		items:     []Code{varDecls, formula, expression},
+		multi:     true,
+		name:      "any",
+		open:      "any(",
+		separator: " | ",
+	}
 	*s = append(*s, g)
 	return s
 }
@@ -1897,6 +1897,106 @@ func (s *Statement) Select() *Statement {
 	// notest
 	t := token{
 		content: "select",
+		typ:     keywordToken,
+	}
+	*s = append(*s, t)
+	return s
+}
+
+// Instanceof renders the instanceof keyword.
+func Instanceof() *Statement {
+	// notest
+	return newStatement().Instanceof()
+}
+
+// Instanceof renders the instanceof keyword.
+func (g *Group) Instanceof() *Statement {
+	// notest
+	s := Instanceof()
+	g.items = append(g.items, s)
+	return s
+}
+
+// Instanceof renders the instanceof keyword.
+func (s *Statement) Instanceof() *Statement {
+	// notest
+	t := token{
+		content: "instanceof",
+		typ:     keywordToken,
+	}
+	*s = append(*s, t)
+	return s
+}
+
+// Override renders the override keyword.
+func Override() *Statement {
+	// notest
+	return newStatement().Override()
+}
+
+// Override renders the override keyword.
+func (g *Group) Override() *Statement {
+	// notest
+	s := Override()
+	g.items = append(g.items, s)
+	return s
+}
+
+// Override renders the override keyword.
+func (s *Statement) Override() *Statement {
+	// notest
+	t := token{
+		content: "override",
+		typ:     keywordToken,
+	}
+	*s = append(*s, t)
+	return s
+}
+
+// Predicate renders the predicate keyword.
+func Predicate() *Statement {
+	// notest
+	return newStatement().Predicate()
+}
+
+// Predicate renders the predicate keyword.
+func (g *Group) Predicate() *Statement {
+	// notest
+	s := Predicate()
+	g.items = append(g.items, s)
+	return s
+}
+
+// Predicate renders the predicate keyword.
+func (s *Statement) Predicate() *Statement {
+	// notest
+	t := token{
+		content: "predicate",
+		typ:     keywordToken,
+	}
+	*s = append(*s, t)
+	return s
+}
+
+// Abstract renders the abstract keyword.
+func Abstract() *Statement {
+	// notest
+	return newStatement().Abstract()
+}
+
+// Abstract renders the abstract keyword.
+func (g *Group) Abstract() *Statement {
+	// notest
+	s := Abstract()
+	g.items = append(g.items, s)
+	return s
+}
+
+// Abstract renders the abstract keyword.
+func (s *Statement) Abstract() *Statement {
+	// notest
+	t := token{
+		content: "abstract",
 		typ:     keywordToken,
 	}
 	*s = append(*s, t)

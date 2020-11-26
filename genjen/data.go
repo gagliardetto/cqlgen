@@ -14,6 +14,10 @@ var keywords = []string{
 	"from",
 	"where",
 	"select",
+	"instanceof",
+	"override",
+	"predicate",
+	"abstract",
 }
 
 var identifiers = []string{
@@ -330,12 +334,12 @@ var groups = []struct {
 	{
 		name:       "Exists",
 		comment:    "renders the exists quantifier.",
-		variadic:   true,
+		variadic:   false,
 		opening:    "exists(",
 		closing:    ")",
-		separator:  "",
+		separator:  " | ",
 		multi:      true,
-		parameters: []string{"args"},
+		parameters: []string{"varDecls", "formula1", "formula2"},
 	},
 	{
 		name:       "Set",
@@ -345,5 +349,15 @@ var groups = []struct {
 		closing:    "]",
 		separator:  ",",
 		parameters: []string{"items"},
+	},
+	{
+		name:       "Any",
+		comment:    "renders an any expression.",
+		variadic:   false,
+		opening:    "any(",
+		closing:    ")",
+		separator:  " | ",
+		multi:      true,
+		parameters: []string{"varDecls", "formula", "expression"},
 	},
 }

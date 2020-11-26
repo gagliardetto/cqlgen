@@ -14,6 +14,16 @@ func main() {
 	f.Import("go")
 	f.Import("DataFlow::PathGraph")
 
+	/*
+		f.Any(
+			Add(Int(), Id("i")),
+			Add(Id("i").Gte().Lit(10)),
+			DoGroup(func(f *Group) {
+				f.Id("i").Eq().Lit(10)
+			}),
+		)
+	*/
+
 	f.Doc("Doc about this module.")
 	f.Private().Module().Id("SomeFramework").BlockFunc(func(modGr *Group) {
 		modGr.Doc("Doc about class")
@@ -26,45 +36,42 @@ func main() {
 
 					metGr.ParensFunc(func(par *Group) {
 						par.Comment("Function: github.com/example/package.GetSomething")
-						par.ExistsFunc(func(exists *Group) {
-							exists.List(
+						par.Exists(
+							List(
 								Id("Function").Id("fn"),
 								Id("DataFlow::CallNode").Id("call"),
-							)
+							),
+							DoGroup(func(st *Group) {
+								st.Id("fn").Dot("hasQualifiedName").Call(Lit("github.com/example/package"), Lit("GetSomething"))
+							}),
+							DoGroup(func(st *Group) {
+								st.Comment("The source is the result:")
 
-							exists.Bar()
-
-							exists.Id("fn").Dot("hasQualifiedName").Call(Lit("github.com/example/package"), Lit("GetSomething"))
-
-							exists.Bar()
-							exists.Comment("The source is the result:")
-
-							exists.Id("call").Eq().Id("fn").Dot("getACall").Call().
-								And().
-								This().Eq().Id("call").Dot("getResult").Call()
-
-						})
+								st.Id("call").Eq().Id("fn").Dot("getACall").Call().
+									And().
+									This().Eq().Id("call").Dot("getResult").Call()
+							}),
+						)
 
 						par.Or()
 
 						par.Comment("Function: github.com/example/package.ParseSomething")
-						par.ExistsFunc(func(exists *Group) {
-							exists.List(
+						par.Exists(
+							List(
 								Id("Function").Id("fn"),
 								Id("DataFlow::CallNode").Id("call"),
-							)
+							),
+							DoGroup(func(st *Group) {
+								st.Id("fn").Dot("hasQualifiedName").Call(Lit("github.com/example/package"), Lit("ParseSomething"))
+							}),
+							DoGroup(func(st *Group) {
+								st.Comment("The source is the 0th parameter:")
 
-							exists.Bar()
-
-							exists.Id("fn").Dot("hasQualifiedName").Call(Lit("github.com/example/package"), Lit("ParseSomething"))
-
-							exists.Bar()
-							exists.Comment("The source is the 0th parameter:")
-
-							exists.Id("call").Eq().Id("fn").Dot("getACall").Call().
-								And().
-								This().Eq().Id("FunctionOutput::parameter").Call(Lit(0)).Dot("getExitNode").Call(Id("call"))
-						})
+								st.Id("call").Eq().Id("fn").Dot("getACall").Call().
+									And().
+									This().Eq().Id("FunctionOutput::parameter").Call(Lit(0)).Dot("getExitNode").Call(Id("call"))
+							}),
+						)
 					})
 
 					metGr.Or()
@@ -74,87 +81,89 @@ func main() {
 					metGr.Comment("or a field read.")
 					metGr.ParensFunc(func(par *Group) {
 						par.Comment("Struct: github.com/example/package.Context")
-						par.ExistsFunc(func(exists *Group) {
-							exists.List(
+						par.Exists(
+							List(
 								String().Id("typeName"),
-							)
-							exists.Bar()
-							exists.Id("typeName").Eq().Lit("Context")
-							exists.Bar()
-
-							exists.Comment("Method calls on `Context`:")
-							exists.ExistsFunc(func(subExists *Group) {
-								subExists.List(
-									Id("DataFlow::MethodCallNode").Id("call"),
-									String().Id("methodName"),
-								)
-
-								subExists.Bar()
-								subExists.Id("call").Dot("getTarget").Call().Dot("hasQualifiedName").Call(
-									Lit("github.com/example/package"),
-									Id("typeName"),
-									Id("methodName"),
-								)
-								subExists.And()
-								subExists.ParensFunc(
-									func(par *Group) {
-										par.Id("methodName").Eq().Lit("FullPath")
-										par.And()
-										par.Parens(
-											Comment("The source is the method call result #0:"),
-											This().Eq().Id("call").Dot("getResult").Call(Lit(0)),
-											Or(),
-											Comment("The source is method call parameter #0:"),
-											This().Eq().Id("FunctionOutput::parameter").Call(Lit(0)).Dot("getExitNode").Call(Id("call")),
+							),
+							DoGroup(func(st *Group) {
+								st.Id("typeName").Eq().Lit("Context")
+							}),
+							DoGroup(func(st *Group) {
+								st.Comment("Method calls on `Context`:")
+								st.Exists(
+									List(
+										Id("DataFlow::MethodCallNode").Id("call"),
+										String().Id("methodName"),
+									),
+									DoGroup(func(st *Group) {
+										st.Id("call").Dot("getTarget").Call().Dot("hasQualifiedName").Call(
+											Lit("github.com/example/package"),
+											Id("typeName"),
+											Id("methodName"),
 										)
+										st.And()
+										st.ParensFunc(
+											func(par *Group) {
+												par.Id("methodName").Eq().Lit("FullPath")
+												par.And()
+												par.Parens(
+													Comment("The source is the method call result #0:"),
+													This().Eq().Id("call").Dot("getResult").Call(Lit(0)),
+													Or(),
+													Comment("The source is method call parameter #0:"),
+													This().Eq().Id("FunctionOutput::parameter").Call(Lit(0)).Dot("getExitNode").Call(Id("call")),
+												)
 
-										par.Or()
-										par.Comment("The source is any result of the call?")
-										par.Id("methodName").Eq().Lit("GetHeader")
-									},
+												par.Or()
+												par.Comment("The source is any result of the call?")
+												par.Id("methodName").Eq().Lit("GetHeader")
+											},
+										)
+									}),
+									nil,
 								)
 
-							})
+								st.Or()
+								st.Comment("Field reads on `Context`:")
+								st.Exists(
+									List(
+										Id("DataFlow::Field").Id("fld"),
+										String().Id("fieldName"),
+									),
+									DoGroup(func(st *Group) {
+										st.Id("fld").Dot("hasQualifiedName").Call(Lit("github.com/example/package"), Id("typeName"), Id("fieldName"))
 
-							exists.Or()
-							exists.Comment("Field reads on `Context`:")
-							exists.ExistsFunc(func(subExists *Group) {
-								subExists.List(
-									Id("DataFlow::Field").Id("fld"),
-									String().Id("fieldName"),
+										st.And()
+										st.Comment("The source is one of these fields reads:")
+
+										st.Id("fieldName").In().Set(Lit("Accepted"), Lit("Params"))
+										st.And()
+										st.This().Eq().Id("fld").Dot("getARead").Call()
+									}),
+									nil,
 								)
-
-								subExists.Bar()
-								subExists.Id("fld").Dot("hasQualifiedName").Call(Lit("github.com/example/package"), Id("typeName"), Id("fieldName"))
-
-								subExists.And()
-								subExists.Comment("The source is one of these fields reads:")
-
-								subExists.Id("fieldName").In().Set(Lit("Accepted"), Lit("Params"))
-								subExists.And()
-								subExists.This().Eq().Id("fld").Dot("getARead").Call()
-							})
-						})
+							}),
+						)
 						par.Or()
 
 						par.Comment("Struct: github.com/example/package.SomeStruct")
-						par.ExistsFunc(func(exists *Group) {
-							exists.List(
+						par.Exists(
+							List(
 								Id("DataFlow::Field").Id("fld"),
 								String().Id("fieldName"),
-							)
+							),
+							DoGroup(func(st *Group) {
+								st.Id("fld").Dot("hasQualifiedName").Call(Lit("github.com/example/package"), Lit("SomeStruct"), Id("fieldName"))
 
-							exists.Bar()
-							exists.Id("fld").Dot("hasQualifiedName").Call(Lit("github.com/example/package"), Lit("SomeStruct"), Id("fieldName"))
+								st.And()
+								st.Comment("The source is one of these fields reads:")
 
-							exists.And()
-							exists.Comment("The source is one of these fields reads:")
-
-							exists.Id("fieldName").In().Set(Lit("Hello"), Lit("World"))
-							exists.And()
-							exists.This().Eq().Id("fld").Dot("getARead").Call()
-
-						})
+								st.Id("fieldName").In().Set(Lit("Hello"), Lit("World"))
+								st.And()
+								st.This().Eq().Id("fld").Dot("getARead").Call()
+							}),
+							nil,
+						)
 
 					})
 
@@ -163,111 +172,109 @@ func main() {
 					metGr.Comment("Example block 3: the type is some custom type.")
 					metGr.Comment("The source is a method call on that type (results or parameters of a call).")
 					metGr.Comment("Some type: github.com/example/package.Slice")
-					metGr.ExistsFunc(func(exists *Group) {
-						exists.String().Id("typeName")
-						exists.Bar()
-						exists.Id("typeName").Eq().Lit("Slice")
-						exists.Bar()
+					metGr.Exists(
+						String().Id("typeName"),
+						Id("typeName").Eq().Lit("Slice"),
+						DoGroup(func(st *Group) {
 
-						exists.Comment("Method calls:")
+							st.Comment("Method calls:")
 
-						exists.ExistsFunc(func(subExists *Group) {
-							subExists.List(
-								Id("DataFlow::MethodCallNode").Id("call"),
-								String().Id("methodName"),
+							st.Exists(
+								List(
+									Id("DataFlow::MethodCallNode").Id("call"),
+									String().Id("methodName"),
+								),
+								DoGroup(func(st *Group) {
+									st.Id("call").Dot("getTarget").Call().Dot("hasQualifiedName").Call(
+										Lit("github.com/example/package"),
+										Id("typeName"),
+										Id("methodName"),
+									)
+									st.And()
+									st.ParensFunc(
+										func(par *Group) {
+											par.Id("methodName").Eq().Lit("GetHeader")
+											par.And()
+											par.Comment("The source is the method call result #0:")
+											par.This().Eq().Id("call").Dot("getResult").Call(Lit(0))
+											par.Or()
+											par.Id("methodName").Eq().Lit("ParseHeader")
+											par.And()
+											par.Comment("The source is method call parameter #1:")
+											par.This().Eq().Id("FunctionOutput::parameter").Call(Lit(1)).Dot("getExitNode").Call(Id("call"))
+
+										},
+									)
+								}),
+								nil,
 							)
-
-							subExists.Bar()
-							subExists.Id("call").Dot("getTarget").Call().Dot("hasQualifiedName").Call(
-								Lit("github.com/example/package"),
-								Id("typeName"),
-								Id("methodName"),
-							)
-							subExists.And()
-							subExists.ParensFunc(
-								func(par *Group) {
-									par.Id("methodName").Eq().Lit("GetHeader")
-									par.And()
-									par.Comment("The source is the method call result #0:")
-									par.This().Eq().Id("call").Dot("getResult").Call(Lit(0))
-									par.Or()
-									par.Id("methodName").Eq().Lit("ParseHeader")
-									par.And()
-									par.Comment("The source is method call parameter #1:")
-									par.This().Eq().Id("FunctionOutput::parameter").Call(Lit(1)).Dot("getExitNode").Call(Id("call"))
-
-								},
-							)
-
-						})
-					})
+						}),
+					)
 
 					metGr.Or()
 
 					metGr.Comment("Example block 4: the type is an interface.")
 					metGr.Comment("The source is a method call on that interface (results or parameters of a call).")
 					metGr.Comment("Interface: github.com/example/package.SomeInterface")
-					metGr.ExistsFunc(func(exists *Group) {
-						exists.String().Id("typeName")
-						exists.Bar()
-						exists.Id("typeName").Eq().Lit("SomeInterface")
-						exists.Bar()
+					metGr.Exists(
+						String().Id("typeName"),
+						Id("typeName").Eq().Lit("SomeInterface"),
+						DoGroup(func(st *Group) {
+							st.Comment("Method calls:")
 
-						exists.Comment("Method calls:")
+							st.Exists(
+								List(
+									Id("DataFlow::MethodCallNode").Id("call"),
+									String().Id("methodName"),
+								),
+								DoGroup(func(st *Group) {
+									st.Id("call").Dot("getTarget").Call().Dot("implements").Call(
+										Lit("github.com/example/package"),
+										Id("typeName"),
+										Id("methodName"),
+									)
+									st.And()
+									st.ParensFunc(
+										func(par *Group) {
+											par.Id("methodName").Eq().Lit("GetSomething")
+											par.And()
+											par.Comment("The source is the method call result #0:")
+											par.This().Eq().Id("call").Dot("getResult").Call(Lit(0))
 
-						exists.ExistsFunc(func(subExists *Group) {
-							subExists.List(
-								Id("DataFlow::MethodCallNode").Id("call"),
-								String().Id("methodName"),
+											par.Or()
+
+											par.Id("methodName").Eq().Lit("UnmarshalSomething")
+											par.And()
+											par.Comment("The source is method call parameter #2:")
+											par.This().Eq().Id("FunctionOutput::parameter").Call(Lit(2)).Dot("getExitNode").Call(Id("call"))
+
+										},
+									)
+								}),
+								nil,
 							)
-
-							subExists.Bar()
-							subExists.Id("call").Dot("getTarget").Call().Dot("implements").Call(
-								Lit("github.com/example/package"),
-								Id("typeName"),
-								Id("methodName"),
-							)
-							subExists.And()
-							subExists.ParensFunc(
-								func(par *Group) {
-									par.Id("methodName").Eq().Lit("GetSomething")
-									par.And()
-									par.Comment("The source is the method call result #0:")
-									par.This().Eq().Id("call").Dot("getResult").Call(Lit(0))
-
-									par.Or()
-
-									par.Id("methodName").Eq().Lit("UnmarshalSomething")
-									par.And()
-									par.Comment("The source is method call parameter #2:")
-									par.This().Eq().Id("FunctionOutput::parameter").Call(Lit(2)).Dot("getExitNode").Call(Id("call"))
-
-								},
-							)
-
-						})
-					})
+						}),
+					)
 
 					metGr.Or()
 
 					metGr.Comment("Example block 5: the type is whatever.")
 					metGr.Comment("The source is a read of a variable of that type.")
 					metGr.Comment("Type: github.com/example/package.Slice")
-					metGr.ExistsFunc(func(exists *Group) {
-						exists.List(
+					metGr.Exists(
+						List(
 							Id("DataFlow::ReadNode").Id("read"),
 							Id("ValueEntity").Id("v"),
-						)
-						exists.Bar()
-
-						exists.Id("read").Dot("reads").Call(Id("v"))
-						exists.And()
-						exists.Id("v").Dot("getType").Call().Dot("hasQualifiedName").Call(Lit("github.com/example/package"), Lit("Slice"))
-
-						exists.Bar()
-						exists.This().Eq().Id("read")
-
-					})
+						),
+						DoGroup(func(st *Group) {
+							st.Id("read").Dot("reads").Call(Id("v"))
+							st.And()
+							st.Id("v").Dot("getType").Call().Dot("hasQualifiedName").Call(Lit("github.com/example/package"), Lit("Slice"))
+						}),
+						DoGroup(func(st *Group) {
+							st.This().Eq().Id("read")
+						}),
+					)
 
 				})
 			})

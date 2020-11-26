@@ -18,6 +18,17 @@ type Group struct {
 	multi     bool
 }
 
+func DoGroup(f func(*Group)) *Statement {
+	g := &Group{
+		close:     "",
+		separator: "",
+		multi:     true,
+	}
+	f(g)
+	s := newStatement()
+	*s = append(*s, g)
+	return s
+}
 func (g *Group) isNull(f *File) bool {
 	if g == nil {
 		return true
