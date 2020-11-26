@@ -4,7 +4,7 @@ import (
 	"bytes"
 	"testing"
 
-	. "github.com/dave/jennifer/jen"
+	. "github.com/gagliardetto/cqlgen/jen"
 )
 
 func TestStatement_Render(t *testing.T) {

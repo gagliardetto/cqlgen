@@ -6,7 +6,7 @@ import (
 	"strings"
 	"testing"
 
-	. "github.com/dave/jennifer/jen"
+	. "github.com/gagliardetto/cqlgen/jen"
 )
 
 var o1 = Options{

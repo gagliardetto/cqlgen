@@ -3,7 +3,7 @@ package jen_test
 import (
 	"testing"
 
-	. "github.com/dave/jennifer/jen"
+	. "github.com/gagliardetto/cqlgen/jen"
 )
 
 var gencases = []tc{

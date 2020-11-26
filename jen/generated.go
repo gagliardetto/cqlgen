@@ -3,27 +3,53 @@
 package jen
 
 // Parens renders a single item in parenthesis. Use for type conversion or to specify evaluation order.
-func Parens(item Code) *Statement {
-	return newStatement().Parens(item)
+func Parens(item ...Code) *Statement {
+	return newStatement().Parens(item...)
 }
 
 // Parens renders a single item in parenthesis. Use for type conversion or to specify evaluation order.
-func (g *Group) Parens(item Code) *Statement {
-	s := Parens(item)
+func (g *Group) Parens(item ...Code) *Statement {
+	s := Parens(item...)
 	g.items = append(g.items, s)
 	return s
 }
 
 // Parens renders a single item in parenthesis. Use for type conversion or to specify evaluation order.
-func (s *Statement) Parens(item Code) *Statement {
+func (s *Statement) Parens(item ...Code) *Statement {
 	g := &Group{
 		close:     ")",
-		items:     []Code{item},
-		multi:     false,
+		items:     item,
+		multi:     true,
 		name:      "parens",
 		open:      "(",
 		separator: "",
 	}
+	*s = append(*s, g)
+	return s
+}
+
+// ParensFunc renders a single item in parenthesis. Use for type conversion or to specify evaluation order.
+func ParensFunc(f func(*Group)) *Statement {
+	return newStatement().ParensFunc(f)
+}
+
+// ParensFunc renders a single item in parenthesis. Use for type conversion or to specify evaluation order.
+func (g *Group) ParensFunc(f func(*Group)) *Statement {
+	s := ParensFunc(f)
+	g.items = append(g.items, s)
+	return s
+}
+
+// ParensFunc renders a single item in parenthesis. Use for type conversion or to specify evaluation order.
+func (s *Statement) ParensFunc(f func(*Group)) *Statement {
+	g := &Group{
+		close:     ")",
+		multi:     true,
+		name:      "parens",
+		open:      "(",
+		separator: "",
+	}
+	f(g)
 	*s = append(*s, g)
 	return s
 }
@@ -1276,497 +1302,152 @@ func (s *Statement) Recover() *Statement {
 	return s
 }
 
-// Bool renders the bool identifier.
-func Bool() *Statement {
-	return newStatement().Bool()
+// Exists renders the exists quantifier.
+func Exists(args ...Code) *Statement {
+	return newStatement().Exists(args...)
 }
 
-// Bool renders the bool identifier.
-func (g *Group) Bool() *Statement {
-	s := Bool()
+// Exists renders the exists quantifier.
+func (g *Group) Exists(args ...Code) *Statement {
+	s := Exists(args...)
 	g.items = append(g.items, s)
 	return s
 }
 
-// Bool renders the bool identifier.
-func (s *Statement) Bool() *Statement {
-	t := token{
-		content: "bool",
-		typ:     identifierToken,
+// Exists renders the exists quantifier.
+func (s *Statement) Exists(args ...Code) *Statement {
+	g := &Group{
+		close:     ")",
+		items:     args,
+		multi:     true,
+		name:      "exists",
+		open:      "exists(",
+		separator: "",
 	}
-	*s = append(*s, t)
+	*s = append(*s, g)
 	return s
 }
 
-// Byte renders the byte identifier.
-func Byte() *Statement {
-	// notest
-	return newStatement().Byte()
+// ExistsFunc renders the exists quantifier.
+func ExistsFunc(f func(*Group)) *Statement {
+	return newStatement().ExistsFunc(f)
 }
 
-// Byte renders the byte identifier.
-func (g *Group) Byte() *Statement {
-	// notest
-	s := Byte()
+// ExistsFunc renders the exists quantifier.
+func (g *Group) ExistsFunc(f func(*Group)) *Statement {
+	s := ExistsFunc(f)
 	g.items = append(g.items, s)
 	return s
 }
 
-// Byte renders the byte identifier.
-func (s *Statement) Byte() *Statement {
-	// notest
-	t := token{
-		content: "byte",
-		typ:     identifierToken,
+// ExistsFunc renders the exists quantifier.
+func (s *Statement) ExistsFunc(f func(*Group)) *Statement {
+	g := &Group{
+		close:     ")",
+		multi:     true,
+		name:      "exists",
+		open:      "exists(",
+		separator: "",
 	}
-	*s = append(*s, t)
+	f(g)
+	*s = append(*s, g)
 	return s
 }
 
-// Complex64 renders the complex64 identifier.
-func Complex64() *Statement {
-	// notest
-	return newStatement().Complex64()
+// Set renders a set literal expressions, i.e. a comma separated list enclosed by square brackets.
+func Set(items ...Code) *Statement {
+	return newStatement().Set(items...)
 }
 
-// Complex64 renders the complex64 identifier.
-func (g *Group) Complex64() *Statement {
-	// notest
-	s := Complex64()
+// Set renders a set literal expressions, i.e. a comma separated list enclosed by square brackets.
+func (g *Group) Set(items ...Code) *Statement {
+	s := Set(items...)
 	g.items = append(g.items, s)
 	return s
 }
 
-// Complex64 renders the complex64 identifier.
-func (s *Statement) Complex64() *Statement {
-	// notest
-	t := token{
-		content: "complex64",
-		typ:     identifierToken,
+// Set renders a set literal expressions, i.e. a comma separated list enclosed by square brackets.
+func (s *Statement) Set(items ...Code) *Statement {
+	g := &Group{
+		close:     "]",
+		items:     items,
+		multi:     false,
+		name:      "set",
+		open:      "[",
+		separator: ",",
 	}
-	*s = append(*s, t)
+	*s = append(*s, g)
 	return s
 }
 
-// Complex128 renders the complex128 identifier.
-func Complex128() *Statement {
-	// notest
-	return newStatement().Complex128()
+// SetFunc renders a set literal expressions, i.e. a comma separated list enclosed by square brackets.
+func SetFunc(f func(*Group)) *Statement {
+	return newStatement().SetFunc(f)
 }
 
-// Complex128 renders the complex128 identifier.
-func (g *Group) Complex128() *Statement {
-	// notest
-	s := Complex128()
+// SetFunc renders a set literal expressions, i.e. a comma separated list enclosed by square brackets.
+func (g *Group) SetFunc(f func(*Group)) *Statement {
+	s := SetFunc(f)
 	g.items = append(g.items, s)
 	return s
 }
 
-// Complex128 renders the complex128 identifier.
-func (s *Statement) Complex128() *Statement {
-	// notest
-	t := token{
-		content: "complex128",
-		typ:     identifierToken,
+// SetFunc renders a set literal expressions, i.e. a comma separated list enclosed by square brackets.
+func (s *Statement) SetFunc(f func(*Group)) *Statement {
+	g := &Group{
+		close:     "]",
+		multi:     false,
+		name:      "set",
+		open:      "[",
+		separator: ",",
 	}
-	*s = append(*s, t)
+	f(g)
+	*s = append(*s, g)
 	return s
 }
 
-// Error renders the error identifier.
-func Error() *Statement {
-	// notest
-	return newStatement().Error()
+// Eq renders a =.
+func Eq() *Statement {
+	return newStatement().Eq()
 }
 
-// Error renders the error identifier.
-func (g *Group) Error() *Statement {
-	// notest
-	s := Error()
+// Eq renders a =.
+func (g *Group) Eq() *Statement {
+	s := Eq()
 	g.items = append(g.items, s)
 	return s
 }
 
-// Error renders the error identifier.
-func (s *Statement) Error() *Statement {
-	// notest
-	t := token{
-		content: "error",
-		typ:     identifierToken,
+// Eq renders a =.
+func (s *Statement) Eq() *Statement {
+	g := &Group{
+		close:     "",
+		items:     []Code{},
+		multi:     false,
+		name:      "eq",
+		open:      "=",
+		separator: "",
 	}
-	*s = append(*s, t)
+	*s = append(*s, g)
 	return s
 }
 
-// Float32 renders the float32 identifier.
-func Float32() *Statement {
-	// notest
-	return newStatement().Float32()
+// Boolean renders the boolean identifier.
+func Boolean() *Statement {
+	return newStatement().Boolean()
 }
 
-// Float32 renders the float32 identifier.
-func (g *Group) Float32() *Statement {
-	// notest
-	s := Float32()
+// Boolean renders the boolean identifier.
+func (g *Group) Boolean() *Statement {
+	s := Boolean()
 	g.items = append(g.items, s)
 	return s
 }
 
-// Float32 renders the float32 identifier.
-func (s *Statement) Float32() *Statement {
-	// notest
+// Boolean renders the boolean identifier.
+func (s *Statement) Boolean() *Statement {
 	t := token{
-		content: "float32",
-		typ:     identifierToken,
-	}
-	*s = append(*s, t)
-	return s
-}
-
-// Float64 renders the float64 identifier.
-func Float64() *Statement {
-	// notest
-	return newStatement().Float64()
-}
-
-// Float64 renders the float64 identifier.
-func (g *Group) Float64() *Statement {
-	// notest
-	s := Float64()
-	g.items = append(g.items, s)
-	return s
-}
-
-// Float64 renders the float64 identifier.
-func (s *Statement) Float64() *Statement {
-	// notest
-	t := token{
-		content: "float64",
-		typ:     identifierToken,
-	}
-	*s = append(*s, t)
-	return s
-}
-
-// Int renders the int identifier.
-func Int() *Statement {
-	// notest
-	return newStatement().Int()
-}
-
-// Int renders the int identifier.
-func (g *Group) Int() *Statement {
-	// notest
-	s := Int()
-	g.items = append(g.items, s)
-	return s
-}
-
-// Int renders the int identifier.
-func (s *Statement) Int() *Statement {
-	// notest
-	t := token{
-		content: "int",
-		typ:     identifierToken,
-	}
-	*s = append(*s, t)
-	return s
-}
-
-// Int8 renders the int8 identifier.
-func Int8() *Statement {
-	// notest
-	return newStatement().Int8()
-}
-
-// Int8 renders the int8 identifier.
-func (g *Group) Int8() *Statement {
-	// notest
-	s := Int8()
-	g.items = append(g.items, s)
-	return s
-}
-
-// Int8 renders the int8 identifier.
-func (s *Statement) Int8() *Statement {
-	// notest
-	t := token{
-		content: "int8",
-		typ:     identifierToken,
-	}
-	*s = append(*s, t)
-	return s
-}
-
-// Int16 renders the int16 identifier.
-func Int16() *Statement {
-	// notest
-	return newStatement().Int16()
-}
-
-// Int16 renders the int16 identifier.
-func (g *Group) Int16() *Statement {
-	// notest
-	s := Int16()
-	g.items = append(g.items, s)
-	return s
-}
-
-// Int16 renders the int16 identifier.
-func (s *Statement) Int16() *Statement {
-	// notest
-	t := token{
-		content: "int16",
-		typ:     identifierToken,
-	}
-	*s = append(*s, t)
-	return s
-}
-
-// Int32 renders the int32 identifier.
-func Int32() *Statement {
-	// notest
-	return newStatement().Int32()
-}
-
-// Int32 renders the int32 identifier.
-func (g *Group) Int32() *Statement {
-	// notest
-	s := Int32()
-	g.items = append(g.items, s)
-	return s
-}
-
-// Int32 renders the int32 identifier.
-func (s *Statement) Int32() *Statement {
-	// notest
-	t := token{
-		content: "int32",
-		typ:     identifierToken,
-	}
-	*s = append(*s, t)
-	return s
-}
-
-// Int64 renders the int64 identifier.
-func Int64() *Statement {
-	// notest
-	return newStatement().Int64()
-}
-
-// Int64 renders the int64 identifier.
-func (g *Group) Int64() *Statement {
-	// notest
-	s := Int64()
-	g.items = append(g.items, s)
-	return s
-}
-
-// Int64 renders the int64 identifier.
-func (s *Statement) Int64() *Statement {
-	// notest
-	t := token{
-		content: "int64",
-		typ:     identifierToken,
-	}
-	*s = append(*s, t)
-	return s
-}
-
-// Rune renders the rune identifier.
-func Rune() *Statement {
-	// notest
-	return newStatement().Rune()
-}
-
-// Rune renders the rune identifier.
-func (g *Group) Rune() *Statement {
-	// notest
-	s := Rune()
-	g.items = append(g.items, s)
-	return s
-}
-
-// Rune renders the rune identifier.
-func (s *Statement) Rune() *Statement {
-	// notest
-	t := token{
-		content: "rune",
-		typ:     identifierToken,
-	}
-	*s = append(*s, t)
-	return s
-}
-
-// String renders the string identifier.
-func String() *Statement {
-	// notest
-	return newStatement().String()
-}
-
-// String renders the string identifier.
-func (g *Group) String() *Statement {
-	// notest
-	s := String()
-	g.items = append(g.items, s)
-	return s
-}
-
-// String renders the string identifier.
-func (s *Statement) String() *Statement {
-	// notest
-	t := token{
-		content: "string",
-		typ:     identifierToken,
-	}
-	*s = append(*s, t)
-	return s
-}
-
-// Uint renders the uint identifier.
-func Uint() *Statement {
-	// notest
-	return newStatement().Uint()
-}
-
-// Uint renders the uint identifier.
-func (g *Group) Uint() *Statement {
-	// notest
-	s := Uint()
-	g.items = append(g.items, s)
-	return s
-}
-
-// Uint renders the uint identifier.
-func (s *Statement) Uint() *Statement {
-	// notest
-	t := token{
-		content: "uint",
-		typ:     identifierToken,
-	}
-	*s = append(*s, t)
-	return s
-}
-
-// Uint8 renders the uint8 identifier.
-func Uint8() *Statement {
-	// notest
-	return newStatement().Uint8()
-}
-
-// Uint8 renders the uint8 identifier.
-func (g *Group) Uint8() *Statement {
-	// notest
-	s := Uint8()
-	g.items = append(g.items, s)
-	return s
-}
-
-// Uint8 renders the uint8 identifier.
-func (s *Statement) Uint8() *Statement {
-	// notest
-	t := token{
-		content: "uint8",
-		typ:     identifierToken,
-	}
-	*s = append(*s, t)
-	return s
-}
-
-// Uint16 renders the uint16 identifier.
-func Uint16() *Statement {
-	// notest
-	return newStatement().Uint16()
-}
-
-// Uint16 renders the uint16 identifier.
-func (g *Group) Uint16() *Statement {
-	// notest
-	s := Uint16()
-	g.items = append(g.items, s)
-	return s
-}
-
-// Uint16 renders the uint16 identifier.
-func (s *Statement) Uint16() *Statement {
-	// notest
-	t := token{
-		content: "uint16",
-		typ:     identifierToken,
-	}
-	*s = append(*s, t)
-	return s
-}
-
-// Uint32 renders the uint32 identifier.
-func Uint32() *Statement {
-	// notest
-	return newStatement().Uint32()
-}
-
-// Uint32 renders the uint32 identifier.
-func (g *Group) Uint32() *Statement {
-	// notest
-	s := Uint32()
-	g.items = append(g.items, s)
-	return s
-}
-
-// Uint32 renders the uint32 identifier.
-func (s *Statement) Uint32() *Statement {
-	// notest
-	t := token{
-		content: "uint32",
-		typ:     identifierToken,
-	}
-	*s = append(*s, t)
-	return s
-}
-
-// Uint64 renders the uint64 identifier.
-func Uint64() *Statement {
-	// notest
-	return newStatement().Uint64()
-}
-
-// Uint64 renders the uint64 identifier.
-func (g *Group) Uint64() *Statement {
-	// notest
-	s := Uint64()
-	g.items = append(g.items, s)
-	return s
-}
-
-// Uint64 renders the uint64 identifier.
-func (s *Statement) Uint64() *Statement {
-	// notest
-	t := token{
-		content: "uint64",
-		typ:     identifierToken,
-	}
-	*s = append(*s, t)
-	return s
-}
-
-// Uintptr renders the uintptr identifier.
-func Uintptr() *Statement {
-	// notest
-	return newStatement().Uintptr()
-}
-
-// Uintptr renders the uintptr identifier.
-func (g *Group) Uintptr() *Statement {
-	// notest
-	s := Uintptr()
-	g.items = append(g.items, s)
-	return s
-}
-
-// Uintptr renders the uintptr identifier.
-func (s *Statement) Uintptr() *Statement {
-	// notest
-	t := token{
-		content: "uintptr",
+		content: "boolean",
 		typ:     identifierToken,
 	}
 	*s = append(*s, t)
@@ -1823,450 +1504,300 @@ func (s *Statement) False() *Statement {
 	return s
 }
 
-// Iota renders the iota identifier.
-func Iota() *Statement {
+// Float renders the float identifier.
+func Float() *Statement {
 	// notest
-	return newStatement().Iota()
+	return newStatement().Float()
 }
 
-// Iota renders the iota identifier.
-func (g *Group) Iota() *Statement {
+// Float renders the float identifier.
+func (g *Group) Float() *Statement {
 	// notest
-	s := Iota()
+	s := Float()
 	g.items = append(g.items, s)
 	return s
 }
 
-// Iota renders the iota identifier.
-func (s *Statement) Iota() *Statement {
+// Float renders the float identifier.
+func (s *Statement) Float() *Statement {
 	// notest
 	t := token{
-		content: "iota",
+		content: "float",
 		typ:     identifierToken,
 	}
 	*s = append(*s, t)
 	return s
 }
 
-// Nil renders the nil identifier.
-func Nil() *Statement {
+// Int renders the int identifier.
+func Int() *Statement {
 	// notest
-	return newStatement().Nil()
+	return newStatement().Int()
 }
 
-// Nil renders the nil identifier.
-func (g *Group) Nil() *Statement {
+// Int renders the int identifier.
+func (g *Group) Int() *Statement {
 	// notest
-	s := Nil()
+	s := Int()
 	g.items = append(g.items, s)
 	return s
 }
 
-// Nil renders the nil identifier.
-func (s *Statement) Nil() *Statement {
+// Int renders the int identifier.
+func (s *Statement) Int() *Statement {
 	// notest
 	t := token{
-		content: "nil",
+		content: "int",
 		typ:     identifierToken,
 	}
 	*s = append(*s, t)
 	return s
 }
 
-// Err renders the err identifier.
-func Err() *Statement {
+// String renders the string identifier.
+func String() *Statement {
 	// notest
-	return newStatement().Err()
+	return newStatement().String()
 }
 
-// Err renders the err identifier.
-func (g *Group) Err() *Statement {
+// String renders the string identifier.
+func (g *Group) String() *Statement {
 	// notest
-	s := Err()
+	s := String()
 	g.items = append(g.items, s)
 	return s
 }
 
-// Err renders the err identifier.
-func (s *Statement) Err() *Statement {
+// String renders the string identifier.
+func (s *Statement) String() *Statement {
 	// notest
 	t := token{
-		content: "err",
+		content: "string",
 		typ:     identifierToken,
 	}
 	*s = append(*s, t)
 	return s
 }
 
-// Break renders the break keyword.
-func Break() *Statement {
+// Date renders the date identifier.
+func Date() *Statement {
 	// notest
-	return newStatement().Break()
+	return newStatement().Date()
 }
 
-// Break renders the break keyword.
-func (g *Group) Break() *Statement {
+// Date renders the date identifier.
+func (g *Group) Date() *Statement {
 	// notest
-	s := Break()
+	s := Date()
 	g.items = append(g.items, s)
 	return s
 }
 
-// Break renders the break keyword.
-func (s *Statement) Break() *Statement {
+// Date renders the date identifier.
+func (s *Statement) Date() *Statement {
 	// notest
 	t := token{
-		content: "break",
+		content: "date",
+		typ:     identifierToken,
+	}
+	*s = append(*s, t)
+	return s
+}
+
+// Private renders the private keyword.
+func Private() *Statement {
+	// notest
+	return newStatement().Private()
+}
+
+// Private renders the private keyword.
+func (g *Group) Private() *Statement {
+	// notest
+	s := Private()
+	g.items = append(g.items, s)
+	return s
+}
+
+// Private renders the private keyword.
+func (s *Statement) Private() *Statement {
+	// notest
+	t := token{
+		content: "private",
 		typ:     keywordToken,
 	}
 	*s = append(*s, t)
 	return s
 }
 
-// Default renders the default keyword.
-func Default() *Statement {
+// Module renders the module keyword.
+func Module() *Statement {
 	// notest
-	return newStatement().Default()
+	return newStatement().Module()
 }
 
-// Default renders the default keyword.
-func (g *Group) Default() *Statement {
+// Module renders the module keyword.
+func (g *Group) Module() *Statement {
 	// notest
-	s := Default()
+	s := Module()
 	g.items = append(g.items, s)
 	return s
 }
 
-// Default renders the default keyword.
-func (s *Statement) Default() *Statement {
+// Module renders the module keyword.
+func (s *Statement) Module() *Statement {
 	// notest
 	t := token{
-		content: "default",
+		content: "module",
 		typ:     keywordToken,
 	}
 	*s = append(*s, t)
 	return s
 }
 
-// Func renders the func keyword.
-func Func() *Statement {
+// Class renders the class keyword.
+func Class() *Statement {
 	// notest
-	return newStatement().Func()
+	return newStatement().Class()
 }
 
-// Func renders the func keyword.
-func (g *Group) Func() *Statement {
+// Class renders the class keyword.
+func (g *Group) Class() *Statement {
 	// notest
-	s := Func()
+	s := Class()
 	g.items = append(g.items, s)
 	return s
 }
 
-// Func renders the func keyword.
-func (s *Statement) Func() *Statement {
+// Class renders the class keyword.
+func (s *Statement) Class() *Statement {
 	// notest
 	t := token{
-		content: "func",
+		content: "class",
 		typ:     keywordToken,
 	}
 	*s = append(*s, t)
 	return s
 }
 
-// Select renders the select keyword.
-func Select() *Statement {
+// Extends renders the extends keyword.
+func Extends() *Statement {
 	// notest
-	return newStatement().Select()
+	return newStatement().Extends()
 }
 
-// Select renders the select keyword.
-func (g *Group) Select() *Statement {
+// Extends renders the extends keyword.
+func (g *Group) Extends() *Statement {
 	// notest
-	s := Select()
+	s := Extends()
 	g.items = append(g.items, s)
 	return s
 }
 
-// Select renders the select keyword.
-func (s *Statement) Select() *Statement {
+// Extends renders the extends keyword.
+func (s *Statement) Extends() *Statement {
 	// notest
 	t := token{
-		content: "select",
+		content: "extends",
 		typ:     keywordToken,
 	}
 	*s = append(*s, t)
 	return s
 }
 
-// Chan renders the chan keyword.
-func Chan() *Statement {
+// Or renders the or keyword.
+func Or() *Statement {
 	// notest
-	return newStatement().Chan()
+	return newStatement().Or()
 }
 
-// Chan renders the chan keyword.
-func (g *Group) Chan() *Statement {
+// Or renders the or keyword.
+func (g *Group) Or() *Statement {
 	// notest
-	s := Chan()
+	s := Or()
 	g.items = append(g.items, s)
 	return s
 }
 
-// Chan renders the chan keyword.
-func (s *Statement) Chan() *Statement {
+// Or renders the or keyword.
+func (s *Statement) Or() *Statement {
 	// notest
 	t := token{
-		content: "chan",
+		content: "or",
 		typ:     keywordToken,
 	}
 	*s = append(*s, t)
 	return s
 }
 
-// Else renders the else keyword.
-func Else() *Statement {
+// And renders the and keyword.
+func And() *Statement {
 	// notest
-	return newStatement().Else()
+	return newStatement().And()
 }
 
-// Else renders the else keyword.
-func (g *Group) Else() *Statement {
+// And renders the and keyword.
+func (g *Group) And() *Statement {
 	// notest
-	s := Else()
+	s := And()
 	g.items = append(g.items, s)
 	return s
 }
 
-// Else renders the else keyword.
-func (s *Statement) Else() *Statement {
+// And renders the and keyword.
+func (s *Statement) And() *Statement {
 	// notest
 	t := token{
-		content: "else",
+		content: "and",
 		typ:     keywordToken,
 	}
 	*s = append(*s, t)
 	return s
 }
 
-// Const renders the const keyword.
-func Const() *Statement {
+// In renders the in keyword.
+func In() *Statement {
 	// notest
-	return newStatement().Const()
+	return newStatement().In()
 }
 
-// Const renders the const keyword.
-func (g *Group) Const() *Statement {
+// In renders the in keyword.
+func (g *Group) In() *Statement {
 	// notest
-	s := Const()
+	s := In()
 	g.items = append(g.items, s)
 	return s
 }
 
-// Const renders the const keyword.
-func (s *Statement) Const() *Statement {
+// In renders the in keyword.
+func (s *Statement) In() *Statement {
 	// notest
 	t := token{
-		content: "const",
+		content: "in",
 		typ:     keywordToken,
 	}
 	*s = append(*s, t)
 	return s
 }
 
-// Fallthrough renders the fallthrough keyword.
-func Fallthrough() *Statement {
+// This renders the this keyword.
+func This() *Statement {
 	// notest
-	return newStatement().Fallthrough()
+	return newStatement().This()
 }
 
-// Fallthrough renders the fallthrough keyword.
-func (g *Group) Fallthrough() *Statement {
+// This renders the this keyword.
+func (g *Group) This() *Statement {
 	// notest
-	s := Fallthrough()
+	s := This()
 	g.items = append(g.items, s)
 	return s
 }
 
-// Fallthrough renders the fallthrough keyword.
-func (s *Statement) Fallthrough() *Statement {
+// This renders the this keyword.
+func (s *Statement) This() *Statement {
 	// notest
 	t := token{
-		content: "fallthrough",
-		typ:     keywordToken,
-	}
-	*s = append(*s, t)
-	return s
-}
-
-// Type renders the type keyword.
-func Type() *Statement {
-	// notest
-	return newStatement().Type()
-}
-
-// Type renders the type keyword.
-func (g *Group) Type() *Statement {
-	// notest
-	s := Type()
-	g.items = append(g.items, s)
-	return s
-}
-
-// Type renders the type keyword.
-func (s *Statement) Type() *Statement {
-	// notest
-	t := token{
-		content: "type",
-		typ:     keywordToken,
-	}
-	*s = append(*s, t)
-	return s
-}
-
-// Continue renders the continue keyword.
-func Continue() *Statement {
-	// notest
-	return newStatement().Continue()
-}
-
-// Continue renders the continue keyword.
-func (g *Group) Continue() *Statement {
-	// notest
-	s := Continue()
-	g.items = append(g.items, s)
-	return s
-}
-
-// Continue renders the continue keyword.
-func (s *Statement) Continue() *Statement {
-	// notest
-	t := token{
-		content: "continue",
-		typ:     keywordToken,
-	}
-	*s = append(*s, t)
-	return s
-}
-
-// Var renders the var keyword.
-func Var() *Statement {
-	// notest
-	return newStatement().Var()
-}
-
-// Var renders the var keyword.
-func (g *Group) Var() *Statement {
-	// notest
-	s := Var()
-	g.items = append(g.items, s)
-	return s
-}
-
-// Var renders the var keyword.
-func (s *Statement) Var() *Statement {
-	// notest
-	t := token{
-		content: "var",
-		typ:     keywordToken,
-	}
-	*s = append(*s, t)
-	return s
-}
-
-// Goto renders the goto keyword.
-func Goto() *Statement {
-	// notest
-	return newStatement().Goto()
-}
-
-// Goto renders the goto keyword.
-func (g *Group) Goto() *Statement {
-	// notest
-	s := Goto()
-	g.items = append(g.items, s)
-	return s
-}
-
-// Goto renders the goto keyword.
-func (s *Statement) Goto() *Statement {
-	// notest
-	t := token{
-		content: "goto",
-		typ:     keywordToken,
-	}
-	*s = append(*s, t)
-	return s
-}
-
-// Defer renders the defer keyword.
-func Defer() *Statement {
-	// notest
-	return newStatement().Defer()
-}
-
-// Defer renders the defer keyword.
-func (g *Group) Defer() *Statement {
-	// notest
-	s := Defer()
-	g.items = append(g.items, s)
-	return s
-}
-
-// Defer renders the defer keyword.
-func (s *Statement) Defer() *Statement {
-	// notest
-	t := token{
-		content: "defer",
-		typ:     keywordToken,
-	}
-	*s = append(*s, t)
-	return s
-}
-
-// Go renders the go keyword.
-func Go() *Statement {
-	// notest
-	return newStatement().Go()
-}
-
-// Go renders the go keyword.
-func (g *Group) Go() *Statement {
-	// notest
-	s := Go()
-	g.items = append(g.items, s)
-	return s
-}
-
-// Go renders the go keyword.
-func (s *Statement) Go() *Statement {
-	// notest
-	t := token{
-		content: "go",
-		typ:     keywordToken,
-	}
-	*s = append(*s, t)
-	return s
-}
-
-// Range renders the range keyword.
-func Range() *Statement {
-	// notest
-	return newStatement().Range()
-}
-
-// Range renders the range keyword.
-func (g *Group) Range() *Statement {
-	// notest
-	s := Range()
-	g.items = append(g.items, s)
-	return s
-}
-
-// Range renders the range keyword.
-func (s *Statement) Range() *Statement {
-	// notest
-	t := token{
-		content: "range",
+		content: "this",
 		typ:     keywordToken,
 	}
 	*s = append(*s, t)

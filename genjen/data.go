@@ -1,8 +1,30 @@
 package main
 
-var keywords = []string{"break", "default", "func", "select", "chan", "else", "const", "fallthrough", "type", "continue", "var", "goto", "defer", "go", "range"}
+var keywords = []string{
+	"private",
+	"module",
+	"class",
+	"extends",
+	"or",
+	"and",
+	"in",
+	"this",
+	"not",
+	"implies",
+	"from",
+	"where",
+	"select",
+}
 
-var identifiers = []string{"bool", "byte", "complex64", "complex128", "error", "float32", "float64", "int", "int8", "int16", "int32", "int64", "rune", "string", "uint", "uint8", "uint16", "uint32", "uint64", "uintptr", "true", "false", "iota", "nil", "err"}
+var identifiers = []string{
+	"boolean",
+	"true",
+	"false",
+	"float",
+	"int",
+	"string",
+	"date",
+}
 
 var groups = []struct {
 	name        string   // name of the function / method
@@ -18,10 +40,11 @@ var groups = []struct {
 	{
 		name:       "Parens",
 		comment:    "renders a single item in parenthesis. Use for type conversion or to specify evaluation order.",
-		variadic:   false,
+		variadic:   true,
 		opening:    "(",
 		closing:    ")",
 		separator:  "",
+		multi:      true,
 		parameters: []string{"item"},
 	},
 	{
@@ -302,6 +325,34 @@ var groups = []struct {
 		opening:    "recover(",
 		closing:    ")",
 		separator:  ",",
+		parameters: []string{},
+	},
+	{
+		name:       "Exists",
+		comment:    "renders the exists quantifier.",
+		variadic:   true,
+		opening:    "exists(",
+		closing:    ")",
+		separator:  "",
+		multi:      true,
+		parameters: []string{"args"},
+	},
+	{
+		name:       "Set",
+		comment:    "renders a set literal expression, i.e. a comma separated list enclosed by square brackets.",
+		variadic:   true,
+		opening:    "[",
+		closing:    "]",
+		separator:  ",",
+		parameters: []string{"items"},
+	},
+	{
+		name:       "Eq",
+		comment:    "renders a =.",
+		variadic:   false,
+		opening:    "=",
+		closing:    "",
+		separator:  "",
 		parameters: []string{},
 	},
 }

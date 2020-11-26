@@ -71,7 +71,7 @@ func (s *Statement) render(f *File, w io.Writer, _ *Statement) error {
 
 // Render renders the Statement to the provided writer.
 func (s *Statement) Render(writer io.Writer) error {
-	return s.RenderWithFile(writer, NewFile(""))
+	return s.RenderWithFile(writer, NewFile())
 }
 
 // GoString renders the Statement for testing. Any error will cause a panic.
@@ -98,4 +98,3 @@ func (s *Statement) RenderWithFile(writer io.Writer, file *File) error {
 	}
 	return nil
 }
-

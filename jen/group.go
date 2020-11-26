@@ -117,7 +117,7 @@ func (g *Group) renderItems(f *File, w io.Writer) (isNull bool, err error) {
 
 // Render renders the Group to the provided writer.
 func (g *Group) Render(writer io.Writer) error {
-	return g.RenderWithFile(writer, NewFile(""))
+	return g.RenderWithFile(writer, NewFile())
 }
 
 // GoString renders the Group for testing. Any error will cause a panic.
@@ -144,4 +144,3 @@ func (g *Group) RenderWithFile(writer io.Writer, file *File) error {
 	}
 	return nil
 }
-
