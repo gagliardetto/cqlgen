@@ -1302,32 +1302,6 @@ func (s *Statement) Recover() *Statement {
 	return s
 }
 
-// Exists renders the exists quantifier.
-func Exists(varDecls Code, formula1 Code, formula2 Code) *Statement {
-	return newStatement().Exists(varDecls, formula1, formula2)
-}
-
-// Exists renders the exists quantifier.
-func (g *Group) Exists(varDecls Code, formula1 Code, formula2 Code) *Statement {
-	s := Exists(varDecls, formula1, formula2)
-	g.items = append(g.items, s)
-	return s
-}
-
-// Exists renders the exists quantifier.
-func (s *Statement) Exists(varDecls Code, formula1 Code, formula2 Code) *Statement {
-	g := &Group{
-		close:     ")",
-		items:     []Code{varDecls, formula1, formula2},
-		multi:     true,
-		name:      "exists",
-		open:      "exists(",
-		separator: " | ",
-	}
-	*s = append(*s, g)
-	return s
-}
-
 // Set renders a set literal expression, i.e. a comma separated list enclosed by square brackets.
 func Set(items ...Code) *Statement {
 	return newStatement().Set(items...)
@@ -1376,6 +1350,32 @@ func (s *Statement) SetFunc(f func(*Group)) *Statement {
 		separator: ",",
 	}
 	f(g)
+	*s = append(*s, g)
+	return s
+}
+
+// Exists renders the exists quantifier.
+func Exists(varDecls Code, formula1 Code, formula2 Code) *Statement {
+	return newStatement().Exists(varDecls, formula1, formula2)
+}
+
+// Exists renders the exists quantifier.
+func (g *Group) Exists(varDecls Code, formula1 Code, formula2 Code) *Statement {
+	s := Exists(varDecls, formula1, formula2)
+	g.items = append(g.items, s)
+	return s
+}
+
+// Exists renders the exists quantifier.
+func (s *Statement) Exists(varDecls Code, formula1 Code, formula2 Code) *Statement {
+	g := &Group{
+		close:     ")",
+		items:     []Code{varDecls, formula1, formula2},
+		multi:     true,
+		name:      "exists",
+		open:      "exists(",
+		separator: " | ",
+	}
 	*s = append(*s, g)
 	return s
 }

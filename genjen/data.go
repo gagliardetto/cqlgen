@@ -332,6 +332,15 @@ var groups = []struct {
 		parameters: []string{},
 	},
 	{
+		name:       "Set",
+		comment:    "renders a set literal expression, i.e. a comma separated list enclosed by square brackets.",
+		variadic:   true,
+		opening:    "[",
+		closing:    "]",
+		separator:  ",",
+		parameters: []string{"items"},
+	},
+	{
 		name:       "Exists",
 		comment:    "renders the exists quantifier.",
 		variadic:   false,
@@ -340,15 +349,6 @@ var groups = []struct {
 		separator:  " | ",
 		multi:      true,
 		parameters: []string{"varDecls", "formula1", "formula2"},
-	},
-	{
-		name:       "Set",
-		comment:    "renders a set literal expression, i.e. a comma separated list enclosed by square brackets.",
-		variadic:   true,
-		opening:    "[",
-		closing:    "]",
-		separator:  ",",
-		parameters: []string{"items"},
 	},
 	{
 		name:       "Any",
