@@ -346,13 +346,4 @@ var groups = []struct {
 		separator:  ",",
 		parameters: []string{"items"},
 	},
-	{
-		name:       "Eq",
-		comment:    "renders a =.",
-		variadic:   false,
-		opening:    "=",
-		closing:    "",
-		separator:  "",
-		parameters: []string{},
-	},
 }

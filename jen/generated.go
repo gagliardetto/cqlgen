@@ -1354,19 +1354,19 @@ func (s *Statement) ExistsFunc(f func(*Group)) *Statement {
 	return s
 }
 
-// Set renders a set literal expressions, i.e. a comma separated list enclosed by square brackets.
+// Set renders a set literal expression, i.e. a comma separated list enclosed by square brackets.
 func Set(items ...Code) *Statement {
 	return newStatement().Set(items...)
 }
 
-// Set renders a set literal expressions, i.e. a comma separated list enclosed by square brackets.
+// Set renders a set literal expression, i.e. a comma separated list enclosed by square brackets.
 func (g *Group) Set(items ...Code) *Statement {
 	s := Set(items...)
 	g.items = append(g.items, s)
 	return s
 }
 
-// Set renders a set literal expressions, i.e. a comma separated list enclosed by square brackets.
+// Set renders a set literal expression, i.e. a comma separated list enclosed by square brackets.
 func (s *Statement) Set(items ...Code) *Statement {
 	g := &Group{
 		close:     "]",
@@ -1380,19 +1380,19 @@ func (s *Statement) Set(items ...Code) *Statement {
 	return s
 }
 
-// SetFunc renders a set literal expressions, i.e. a comma separated list enclosed by square brackets.
+// SetFunc renders a set literal expression, i.e. a comma separated list enclosed by square brackets.
 func SetFunc(f func(*Group)) *Statement {
 	return newStatement().SetFunc(f)
 }
 
-// SetFunc renders a set literal expressions, i.e. a comma separated list enclosed by square brackets.
+// SetFunc renders a set literal expression, i.e. a comma separated list enclosed by square brackets.
 func (g *Group) SetFunc(f func(*Group)) *Statement {
 	s := SetFunc(f)
 	g.items = append(g.items, s)
 	return s
 }
 
-// SetFunc renders a set literal expressions, i.e. a comma separated list enclosed by square brackets.
+// SetFunc renders a set literal expression, i.e. a comma separated list enclosed by square brackets.
 func (s *Statement) SetFunc(f func(*Group)) *Statement {
 	g := &Group{
 		close:     "]",
@@ -1402,32 +1402,6 @@ func (s *Statement) SetFunc(f func(*Group)) *Statement {
 		separator: ",",
 	}
 	f(g)
-	*s = append(*s, g)
-	return s
-}
-
-// Eq renders a =.
-func Eq() *Statement {
-	return newStatement().Eq()
-}
-
-// Eq renders a =.
-func (g *Group) Eq() *Statement {
-	s := Eq()
-	g.items = append(g.items, s)
-	return s
-}
-
-// Eq renders a =.
-func (s *Statement) Eq() *Statement {
-	g := &Group{
-		close:     "",
-		items:     []Code{},
-		multi:     false,
-		name:      "eq",
-		open:      "=",
-		separator: "",
-	}
 	*s = append(*s, g)
 	return s
 }
@@ -1798,6 +1772,131 @@ func (s *Statement) This() *Statement {
 	// notest
 	t := token{
 		content: "this",
+		typ:     keywordToken,
+	}
+	*s = append(*s, t)
+	return s
+}
+
+// Not renders the not keyword.
+func Not() *Statement {
+	// notest
+	return newStatement().Not()
+}
+
+// Not renders the not keyword.
+func (g *Group) Not() *Statement {
+	// notest
+	s := Not()
+	g.items = append(g.items, s)
+	return s
+}
+
+// Not renders the not keyword.
+func (s *Statement) Not() *Statement {
+	// notest
+	t := token{
+		content: "not",
+		typ:     keywordToken,
+	}
+	*s = append(*s, t)
+	return s
+}
+
+// Implies renders the implies keyword.
+func Implies() *Statement {
+	// notest
+	return newStatement().Implies()
+}
+
+// Implies renders the implies keyword.
+func (g *Group) Implies() *Statement {
+	// notest
+	s := Implies()
+	g.items = append(g.items, s)
+	return s
+}
+
+// Implies renders the implies keyword.
+func (s *Statement) Implies() *Statement {
+	// notest
+	t := token{
+		content: "implies",
+		typ:     keywordToken,
+	}
+	*s = append(*s, t)
+	return s
+}
+
+// From renders the from keyword.
+func From() *Statement {
+	// notest
+	return newStatement().From()
+}
+
+// From renders the from keyword.
+func (g *Group) From() *Statement {
+	// notest
+	s := From()
+	g.items = append(g.items, s)
+	return s
+}
+
+// From renders the from keyword.
+func (s *Statement) From() *Statement {
+	// notest
+	t := token{
+		content: "from",
+		typ:     keywordToken,
+	}
+	*s = append(*s, t)
+	return s
+}
+
+// Where renders the where keyword.
+func Where() *Statement {
+	// notest
+	return newStatement().Where()
+}
+
+// Where renders the where keyword.
+func (g *Group) Where() *Statement {
+	// notest
+	s := Where()
+	g.items = append(g.items, s)
+	return s
+}
+
+// Where renders the where keyword.
+func (s *Statement) Where() *Statement {
+	// notest
+	t := token{
+		content: "where",
+		typ:     keywordToken,
+	}
+	*s = append(*s, t)
+	return s
+}
+
+// Select renders the select keyword.
+func Select() *Statement {
+	// notest
+	return newStatement().Select()
+}
+
+// Select renders the select keyword.
+func (g *Group) Select() *Statement {
+	// notest
+	s := Select()
+	g.items = append(g.items, s)
+	return s
+}
+
+// Select renders the select keyword.
+func (s *Statement) Select() *Statement {
+	// notest
+	t := token{
+		content: "select",
 		typ:     keywordToken,
 	}
 	*s = append(*s, t)
