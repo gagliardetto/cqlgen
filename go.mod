@@ -5,7 +5,10 @@ go 1.15
 require (
 	github.com/aybabtme/rgbterm v0.0.0-20170906152045-cc83f3b3ce59 // indirect
 	github.com/buger/goterm v0.0.0-20200322175922-2f3e71b85129 // indirect
+	github.com/dave/gopackages v0.0.0-20170318123100-46e7023ec56e // indirect
 	github.com/dave/jennifer v1.4.1
+	github.com/dave/kerr v0.0.0-20170318121727-bc25dd6abe8e // indirect
+	github.com/dave/rebecca v0.9.1 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/gagliardetto/utilz v0.0.0-20200824151221-3a6131a12868 // indirect
 	github.com/hako/durafmt v0.0.0-20200710122514-c0fb7b4da026 // indirect

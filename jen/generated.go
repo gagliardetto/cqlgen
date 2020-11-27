@@ -106,58 +106,6 @@ func (s *Statement) ListFunc(f func(*Group)) *Statement {
 	return s
 }
 
-// Values renders a comma separated list enclosed by curly braces. Use for slice or composite literals.
-func Values(values ...Code) *Statement {
-	return newStatement().Values(values...)
-}
-
-// Values renders a comma separated list enclosed by curly braces. Use for slice or composite literals.
-func (g *Group) Values(values ...Code) *Statement {
-	s := Values(values...)
-	g.items = append(g.items, s)
-	return s
-}
-
-// Values renders a comma separated list enclosed by curly braces. Use for slice or composite literals.
-func (s *Statement) Values(values ...Code) *Statement {
-	g := &Group{
-		close:     "}",
-		items:     values,
-		multi:     false,
-		name:      "values",
-		open:      "{",
-		separator: ",",
-	}
-	*s = append(*s, g)
-	return s
-}
-
-// ValuesFunc renders a comma separated list enclosed by curly braces. Use for slice or composite literals.
-func ValuesFunc(f func(*Group)) *Statement {
-	return newStatement().ValuesFunc(f)
-}
-
-// ValuesFunc renders a comma separated list enclosed by curly braces. Use for slice or composite literals.
-func (g *Group) ValuesFunc(f func(*Group)) *Statement {
-	s := ValuesFunc(f)
-	g.items = append(g.items, s)
-	return s
-}
-
-// ValuesFunc renders a comma separated list enclosed by curly braces. Use for slice or composite literals.
-func (s *Statement) ValuesFunc(f func(*Group)) *Statement {
-	g := &Group{
-		close:     "}",
-		multi:     false,
-		name:      "values",
-		open:      "{",
-		separator: ",",
-	}
-	f(g)
-	*s = append(*s, g)
-	return s
-}
-
 // Index renders a colon separated list enclosed by square brackets. Use for array / slice indexes and definitions.
 func Index(items ...Code) *Statement {
 	return newStatement().Index(items...)
@@ -444,32 +392,6 @@ func (s *Statement) Assert(typ Code) *Statement {
 	return s
 }
 
-// Map renders the keyword followed by a single item enclosed by square brackets. Use for map definitions.
-func Map(typ Code) *Statement {
-	return newStatement().Map(typ)
-}
-
-// Map renders the keyword followed by a single item enclosed by square brackets. Use for map definitions.
-func (g *Group) Map(typ Code) *Statement {
-	s := Map(typ)
-	g.items = append(g.items, s)
-	return s
-}
-
-// Map renders the keyword followed by a single item enclosed by square brackets. Use for map definitions.
-func (s *Statement) Map(typ Code) *Statement {
-	g := &Group{
-		close:     "]",
-		items:     []Code{typ},
-		multi:     false,
-		name:      "map",
-		open:      "map[",
-		separator: "",
-	}
-	*s = append(*s, g)
-	return s
-}
-
 // If renders the keyword followed by a semicolon separated list.
 func If(conditions ...Code) *Statement {
 	return newStatement().If(conditions...)
@@ -516,58 +438,6 @@ func (s *Statement) IfFunc(f func(*Group)) *Statement {
 		name:      "if",
 		open:      "if ",
 		separator: ";",
-	}
-	f(g)
-	*s = append(*s, g)
-	return s
-}
-
-// Return renders the keyword followed by a comma separated list.
-func Return(results ...Code) *Statement {
-	return newStatement().Return(results...)
-}
-
-// Return renders the keyword followed by a comma separated list.
-func (g *Group) Return(results ...Code) *Statement {
-	s := Return(results...)
-	g.items = append(g.items, s)
-	return s
-}
-
-// Return renders the keyword followed by a comma separated list.
-func (s *Statement) Return(results ...Code) *Statement {
-	g := &Group{
-		close:     "",
-		items:     results,
-		multi:     false,
-		name:      "return",
-		open:      "return ",
-		separator: ",",
-	}
-	*s = append(*s, g)
-	return s
-}
-
-// ReturnFunc renders the keyword followed by a comma separated list.
-func ReturnFunc(f func(*Group)) *Statement {
-	return newStatement().ReturnFunc(f)
-}
-
-// ReturnFunc renders the keyword followed by a comma separated list.
-func (g *Group) ReturnFunc(f func(*Group)) *Statement {
-	s := ReturnFunc(f)
-	g.items = append(g.items, s)
-	return s
-}
-
-// ReturnFunc renders the keyword followed by a comma separated list.
-func (s *Statement) ReturnFunc(f func(*Group)) *Statement {
-	g := &Group{
-		close:     "",
-		multi:     false,
-		name:      "return",
-		open:      "return ",
-		separator: ",",
 	}
 	f(g)
 	*s = append(*s, g)
@@ -626,682 +496,6 @@ func (s *Statement) ForFunc(f func(*Group)) *Statement {
 	return s
 }
 
-// Switch renders the keyword followed by a semicolon separated list.
-func Switch(conditions ...Code) *Statement {
-	return newStatement().Switch(conditions...)
-}
-
-// Switch renders the keyword followed by a semicolon separated list.
-func (g *Group) Switch(conditions ...Code) *Statement {
-	s := Switch(conditions...)
-	g.items = append(g.items, s)
-	return s
-}
-
-// Switch renders the keyword followed by a semicolon separated list.
-func (s *Statement) Switch(conditions ...Code) *Statement {
-	g := &Group{
-		close:     "",
-		items:     conditions,
-		multi:     false,
-		name:      "switch",
-		open:      "switch ",
-		separator: ";",
-	}
-	*s = append(*s, g)
-	return s
-}
-
-// SwitchFunc renders the keyword followed by a semicolon separated list.
-func SwitchFunc(f func(*Group)) *Statement {
-	return newStatement().SwitchFunc(f)
-}
-
-// SwitchFunc renders the keyword followed by a semicolon separated list.
-func (g *Group) SwitchFunc(f func(*Group)) *Statement {
-	s := SwitchFunc(f)
-	g.items = append(g.items, s)
-	return s
-}
-
-// SwitchFunc renders the keyword followed by a semicolon separated list.
-func (s *Statement) SwitchFunc(f func(*Group)) *Statement {
-	g := &Group{
-		close:     "",
-		multi:     false,
-		name:      "switch",
-		open:      "switch ",
-		separator: ";",
-	}
-	f(g)
-	*s = append(*s, g)
-	return s
-}
-
-// Interface renders the keyword followed by a method list enclosed by curly braces.
-func Interface(methods ...Code) *Statement {
-	return newStatement().Interface(methods...)
-}
-
-// Interface renders the keyword followed by a method list enclosed by curly braces.
-func (g *Group) Interface(methods ...Code) *Statement {
-	s := Interface(methods...)
-	g.items = append(g.items, s)
-	return s
-}
-
-// Interface renders the keyword followed by a method list enclosed by curly braces.
-func (s *Statement) Interface(methods ...Code) *Statement {
-	g := &Group{
-		close:     "}",
-		items:     methods,
-		multi:     true,
-		name:      "interface",
-		open:      "interface{",
-		separator: "",
-	}
-	*s = append(*s, g)
-	return s
-}
-
-// InterfaceFunc renders the keyword followed by a method list enclosed by curly braces.
-func InterfaceFunc(f func(*Group)) *Statement {
-	return newStatement().InterfaceFunc(f)
-}
-
-// InterfaceFunc renders the keyword followed by a method list enclosed by curly braces.
-func (g *Group) InterfaceFunc(f func(*Group)) *Statement {
-	s := InterfaceFunc(f)
-	g.items = append(g.items, s)
-	return s
-}
-
-// InterfaceFunc renders the keyword followed by a method list enclosed by curly braces.
-func (s *Statement) InterfaceFunc(f func(*Group)) *Statement {
-	g := &Group{
-		close:     "}",
-		multi:     true,
-		name:      "interface",
-		open:      "interface{",
-		separator: "",
-	}
-	f(g)
-	*s = append(*s, g)
-	return s
-}
-
-// Struct renders the keyword followed by a field list enclosed by curly braces.
-func Struct(fields ...Code) *Statement {
-	return newStatement().Struct(fields...)
-}
-
-// Struct renders the keyword followed by a field list enclosed by curly braces.
-func (g *Group) Struct(fields ...Code) *Statement {
-	s := Struct(fields...)
-	g.items = append(g.items, s)
-	return s
-}
-
-// Struct renders the keyword followed by a field list enclosed by curly braces.
-func (s *Statement) Struct(fields ...Code) *Statement {
-	g := &Group{
-		close:     "}",
-		items:     fields,
-		multi:     true,
-		name:      "struct",
-		open:      "struct{",
-		separator: "",
-	}
-	*s = append(*s, g)
-	return s
-}
-
-// StructFunc renders the keyword followed by a field list enclosed by curly braces.
-func StructFunc(f func(*Group)) *Statement {
-	return newStatement().StructFunc(f)
-}
-
-// StructFunc renders the keyword followed by a field list enclosed by curly braces.
-func (g *Group) StructFunc(f func(*Group)) *Statement {
-	s := StructFunc(f)
-	g.items = append(g.items, s)
-	return s
-}
-
-// StructFunc renders the keyword followed by a field list enclosed by curly braces.
-func (s *Statement) StructFunc(f func(*Group)) *Statement {
-	g := &Group{
-		close:     "}",
-		multi:     true,
-		name:      "struct",
-		open:      "struct{",
-		separator: "",
-	}
-	f(g)
-	*s = append(*s, g)
-	return s
-}
-
-// Case renders the keyword followed by a comma separated list.
-func Case(cases ...Code) *Statement {
-	return newStatement().Case(cases...)
-}
-
-// Case renders the keyword followed by a comma separated list.
-func (g *Group) Case(cases ...Code) *Statement {
-	s := Case(cases...)
-	g.items = append(g.items, s)
-	return s
-}
-
-// Case renders the keyword followed by a comma separated list.
-func (s *Statement) Case(cases ...Code) *Statement {
-	g := &Group{
-		close:     ":",
-		items:     cases,
-		multi:     false,
-		name:      "case",
-		open:      "case ",
-		separator: ",",
-	}
-	*s = append(*s, g)
-	return s
-}
-
-// CaseFunc renders the keyword followed by a comma separated list.
-func CaseFunc(f func(*Group)) *Statement {
-	return newStatement().CaseFunc(f)
-}
-
-// CaseFunc renders the keyword followed by a comma separated list.
-func (g *Group) CaseFunc(f func(*Group)) *Statement {
-	s := CaseFunc(f)
-	g.items = append(g.items, s)
-	return s
-}
-
-// CaseFunc renders the keyword followed by a comma separated list.
-func (s *Statement) CaseFunc(f func(*Group)) *Statement {
-	g := &Group{
-		close:     ":",
-		multi:     false,
-		name:      "case",
-		open:      "case ",
-		separator: ",",
-	}
-	f(g)
-	*s = append(*s, g)
-	return s
-}
-
-// Append renders the append built-in function.
-func Append(args ...Code) *Statement {
-	return newStatement().Append(args...)
-}
-
-// Append renders the append built-in function.
-func (g *Group) Append(args ...Code) *Statement {
-	s := Append(args...)
-	g.items = append(g.items, s)
-	return s
-}
-
-// Append renders the append built-in function.
-func (s *Statement) Append(args ...Code) *Statement {
-	g := &Group{
-		close:     ")",
-		items:     args,
-		multi:     false,
-		name:      "append",
-		open:      "append(",
-		separator: ",",
-	}
-	*s = append(*s, g)
-	return s
-}
-
-// AppendFunc renders the append built-in function.
-func AppendFunc(f func(*Group)) *Statement {
-	return newStatement().AppendFunc(f)
-}
-
-// AppendFunc renders the append built-in function.
-func (g *Group) AppendFunc(f func(*Group)) *Statement {
-	s := AppendFunc(f)
-	g.items = append(g.items, s)
-	return s
-}
-
-// AppendFunc renders the append built-in function.
-func (s *Statement) AppendFunc(f func(*Group)) *Statement {
-	g := &Group{
-		close:     ")",
-		multi:     false,
-		name:      "append",
-		open:      "append(",
-		separator: ",",
-	}
-	f(g)
-	*s = append(*s, g)
-	return s
-}
-
-// Cap renders the cap built-in function.
-func Cap(v Code) *Statement {
-	return newStatement().Cap(v)
-}
-
-// Cap renders the cap built-in function.
-func (g *Group) Cap(v Code) *Statement {
-	s := Cap(v)
-	g.items = append(g.items, s)
-	return s
-}
-
-// Cap renders the cap built-in function.
-func (s *Statement) Cap(v Code) *Statement {
-	g := &Group{
-		close:     ")",
-		items:     []Code{v},
-		multi:     false,
-		name:      "cap",
-		open:      "cap(",
-		separator: ",",
-	}
-	*s = append(*s, g)
-	return s
-}
-
-// Close renders the close built-in function.
-func Close(c Code) *Statement {
-	return newStatement().Close(c)
-}
-
-// Close renders the close built-in function.
-func (g *Group) Close(c Code) *Statement {
-	s := Close(c)
-	g.items = append(g.items, s)
-	return s
-}
-
-// Close renders the close built-in function.
-func (s *Statement) Close(c Code) *Statement {
-	g := &Group{
-		close:     ")",
-		items:     []Code{c},
-		multi:     false,
-		name:      "close",
-		open:      "close(",
-		separator: ",",
-	}
-	*s = append(*s, g)
-	return s
-}
-
-// Complex renders the complex built-in function.
-func Complex(r Code, i Code) *Statement {
-	return newStatement().Complex(r, i)
-}
-
-// Complex renders the complex built-in function.
-func (g *Group) Complex(r Code, i Code) *Statement {
-	s := Complex(r, i)
-	g.items = append(g.items, s)
-	return s
-}
-
-// Complex renders the complex built-in function.
-func (s *Statement) Complex(r Code, i Code) *Statement {
-	g := &Group{
-		close:     ")",
-		items:     []Code{r, i},
-		multi:     false,
-		name:      "complex",
-		open:      "complex(",
-		separator: ",",
-	}
-	*s = append(*s, g)
-	return s
-}
-
-// Copy renders the copy built-in function.
-func Copy(dst Code, src Code) *Statement {
-	return newStatement().Copy(dst, src)
-}
-
-// Copy renders the copy built-in function.
-func (g *Group) Copy(dst Code, src Code) *Statement {
-	s := Copy(dst, src)
-	g.items = append(g.items, s)
-	return s
-}
-
-// Copy renders the copy built-in function.
-func (s *Statement) Copy(dst Code, src Code) *Statement {
-	g := &Group{
-		close:     ")",
-		items:     []Code{dst, src},
-		multi:     false,
-		name:      "copy",
-		open:      "copy(",
-		separator: ",",
-	}
-	*s = append(*s, g)
-	return s
-}
-
-// Delete renders the delete built-in function.
-func Delete(m Code, key Code) *Statement {
-	return newStatement().Delete(m, key)
-}
-
-// Delete renders the delete built-in function.
-func (g *Group) Delete(m Code, key Code) *Statement {
-	s := Delete(m, key)
-	g.items = append(g.items, s)
-	return s
-}
-
-// Delete renders the delete built-in function.
-func (s *Statement) Delete(m Code, key Code) *Statement {
-	g := &Group{
-		close:     ")",
-		items:     []Code{m, key},
-		multi:     false,
-		name:      "delete",
-		open:      "delete(",
-		separator: ",",
-	}
-	*s = append(*s, g)
-	return s
-}
-
-// Imag renders the imag built-in function.
-func Imag(c Code) *Statement {
-	return newStatement().Imag(c)
-}
-
-// Imag renders the imag built-in function.
-func (g *Group) Imag(c Code) *Statement {
-	s := Imag(c)
-	g.items = append(g.items, s)
-	return s
-}
-
-// Imag renders the imag built-in function.
-func (s *Statement) Imag(c Code) *Statement {
-	g := &Group{
-		close:     ")",
-		items:     []Code{c},
-		multi:     false,
-		name:      "imag",
-		open:      "imag(",
-		separator: ",",
-	}
-	*s = append(*s, g)
-	return s
-}
-
-// Len renders the len built-in function.
-func Len(v Code) *Statement {
-	return newStatement().Len(v)
-}
-
-// Len renders the len built-in function.
-func (g *Group) Len(v Code) *Statement {
-	s := Len(v)
-	g.items = append(g.items, s)
-	return s
-}
-
-// Len renders the len built-in function.
-func (s *Statement) Len(v Code) *Statement {
-	g := &Group{
-		close:     ")",
-		items:     []Code{v},
-		multi:     false,
-		name:      "len",
-		open:      "len(",
-		separator: ",",
-	}
-	*s = append(*s, g)
-	return s
-}
-
-// Make renders the make built-in function. The final parameter of the make function is optional, so it is represented by a variadic parameter list.
-func Make(args ...Code) *Statement {
-	return newStatement().Make(args...)
-}
-
-// Make renders the make built-in function. The final parameter of the make function is optional, so it is represented by a variadic parameter list.
-func (g *Group) Make(args ...Code) *Statement {
-	s := Make(args...)
-	g.items = append(g.items, s)
-	return s
-}
-
-// Make renders the make built-in function. The final parameter of the make function is optional, so it is represented by a variadic parameter list.
-func (s *Statement) Make(args ...Code) *Statement {
-	g := &Group{
-		close:     ")",
-		items:     args,
-		multi:     false,
-		name:      "make",
-		open:      "make(",
-		separator: ",",
-	}
-	*s = append(*s, g)
-	return s
-}
-
-// New renders the new built-in function.
-func New(typ Code) *Statement {
-	return newStatement().New(typ)
-}
-
-// New renders the new built-in function.
-func (g *Group) New(typ Code) *Statement {
-	s := New(typ)
-	g.items = append(g.items, s)
-	return s
-}
-
-// New renders the new built-in function.
-func (s *Statement) New(typ Code) *Statement {
-	g := &Group{
-		close:     ")",
-		items:     []Code{typ},
-		multi:     false,
-		name:      "new",
-		open:      "new(",
-		separator: ",",
-	}
-	*s = append(*s, g)
-	return s
-}
-
-// Panic renders the panic built-in function.
-func Panic(v Code) *Statement {
-	return newStatement().Panic(v)
-}
-
-// Panic renders the panic built-in function.
-func (g *Group) Panic(v Code) *Statement {
-	s := Panic(v)
-	g.items = append(g.items, s)
-	return s
-}
-
-// Panic renders the panic built-in function.
-func (s *Statement) Panic(v Code) *Statement {
-	g := &Group{
-		close:     ")",
-		items:     []Code{v},
-		multi:     false,
-		name:      "panic",
-		open:      "panic(",
-		separator: ",",
-	}
-	*s = append(*s, g)
-	return s
-}
-
-// Print renders the print built-in function.
-func Print(args ...Code) *Statement {
-	return newStatement().Print(args...)
-}
-
-// Print renders the print built-in function.
-func (g *Group) Print(args ...Code) *Statement {
-	s := Print(args...)
-	g.items = append(g.items, s)
-	return s
-}
-
-// Print renders the print built-in function.
-func (s *Statement) Print(args ...Code) *Statement {
-	g := &Group{
-		close:     ")",
-		items:     args,
-		multi:     false,
-		name:      "print",
-		open:      "print(",
-		separator: ",",
-	}
-	*s = append(*s, g)
-	return s
-}
-
-// PrintFunc renders the print built-in function.
-func PrintFunc(f func(*Group)) *Statement {
-	return newStatement().PrintFunc(f)
-}
-
-// PrintFunc renders the print built-in function.
-func (g *Group) PrintFunc(f func(*Group)) *Statement {
-	s := PrintFunc(f)
-	g.items = append(g.items, s)
-	return s
-}
-
-// PrintFunc renders the print built-in function.
-func (s *Statement) PrintFunc(f func(*Group)) *Statement {
-	g := &Group{
-		close:     ")",
-		multi:     false,
-		name:      "print",
-		open:      "print(",
-		separator: ",",
-	}
-	f(g)
-	*s = append(*s, g)
-	return s
-}
-
-// Println renders the println built-in function.
-func Println(args ...Code) *Statement {
-	return newStatement().Println(args...)
-}
-
-// Println renders the println built-in function.
-func (g *Group) Println(args ...Code) *Statement {
-	s := Println(args...)
-	g.items = append(g.items, s)
-	return s
-}
-
-// Println renders the println built-in function.
-func (s *Statement) Println(args ...Code) *Statement {
-	g := &Group{
-		close:     ")",
-		items:     args,
-		multi:     false,
-		name:      "println",
-		open:      "println(",
-		separator: ",",
-	}
-	*s = append(*s, g)
-	return s
-}
-
-// PrintlnFunc renders the println built-in function.
-func PrintlnFunc(f func(*Group)) *Statement {
-	return newStatement().PrintlnFunc(f)
-}
-
-// PrintlnFunc renders the println built-in function.
-func (g *Group) PrintlnFunc(f func(*Group)) *Statement {
-	s := PrintlnFunc(f)
-	g.items = append(g.items, s)
-	return s
-}
-
-// PrintlnFunc renders the println built-in function.
-func (s *Statement) PrintlnFunc(f func(*Group)) *Statement {
-	g := &Group{
-		close:     ")",
-		multi:     false,
-		name:      "println",
-		open:      "println(",
-		separator: ",",
-	}
-	f(g)
-	*s = append(*s, g)
-	return s
-}
-
-// Real renders the real built-in function.
-func Real(c Code) *Statement {
-	return newStatement().Real(c)
-}
-
-// Real renders the real built-in function.
-func (g *Group) Real(c Code) *Statement {
-	s := Real(c)
-	g.items = append(g.items, s)
-	return s
-}
-
-// Real renders the real built-in function.
-func (s *Statement) Real(c Code) *Statement {
-	g := &Group{
-		close:     ")",
-		items:     []Code{c},
-		multi:     false,
-		name:      "real",
-		open:      "real(",
-		separator: ",",
-	}
-	*s = append(*s, g)
-	return s
-}
-
-// Recover renders the recover built-in function.
-func Recover() *Statement {
-	return newStatement().Recover()
-}
-
-// Recover renders the recover built-in function.
-func (g *Group) Recover() *Statement {
-	s := Recover()
-	g.items = append(g.items, s)
-	return s
-}
-
-// Recover renders the recover built-in function.
-func (s *Statement) Recover() *Statement {
-	g := &Group{
-		close:     ")",
-		items:     []Code{},
-		multi:     false,
-		name:      "recover",
-		open:      "recover(",
-		separator: ",",
-	}
-	*s = append(*s, g)
-	return s
-}
-
 // Set renders a set literal expression, i.e. a comma separated list enclosed by square brackets.
 func Set(items ...Code) *Statement {
 	return newStatement().Set(items...)
@@ -1354,23 +548,49 @@ func (s *Statement) SetFunc(f func(*Group)) *Statement {
 	return s
 }
 
-// Exists renders the exists quantifier.
-func Exists(varDecls Code, formula1 Code, formula2 Code) *Statement {
-	return newStatement().Exists(varDecls, formula1, formula2)
+// Any renders an any expression.
+func Any(vars Code, formula Code, expression Code) *Statement {
+	return newStatement().Any(vars, formula, expression)
+}
+
+// Any renders an any expression.
+func (g *Group) Any(vars Code, formula Code, expression Code) *Statement {
+	s := Any(vars, formula, expression)
+	g.items = append(g.items, s)
+	return s
+}
+
+// Any renders an any expression.
+func (s *Statement) Any(vars Code, formula Code, expression Code) *Statement {
+	g := &Group{
+		close:     ")",
+		items:     []Code{vars, formula, expression},
+		multi:     true,
+		name:      "any",
+		open:      "any(",
+		separator: " | ",
+	}
+	*s = append(*s, g)
+	return s
 }
 
 // Exists renders the exists quantifier.
-func (g *Group) Exists(varDecls Code, formula1 Code, formula2 Code) *Statement {
-	s := Exists(varDecls, formula1, formula2)
+func Exists(vars Code, formula1 Code, formula2 Code) *Statement {
+	return newStatement().Exists(vars, formula1, formula2)
+}
+
+// Exists renders the exists quantifier.
+func (g *Group) Exists(vars Code, formula1 Code, formula2 Code) *Statement {
+	s := Exists(vars, formula1, formula2)
 	g.items = append(g.items, s)
 	return s
 }
 
 // Exists renders the exists quantifier.
-func (s *Statement) Exists(varDecls Code, formula1 Code, formula2 Code) *Statement {
+func (s *Statement) Exists(vars Code, formula1 Code, formula2 Code) *Statement {
 	g := &Group{
 		close:     ")",
-		items:     []Code{varDecls, formula1, formula2},
+		items:     []Code{vars, formula1, formula2},
 		multi:     true,
 		name:      "exists",
 		open:      "exists(",
@@ -1380,28 +600,106 @@ func (s *Statement) Exists(varDecls Code, formula1 Code, formula2 Code) *Stateme
 	return s
 }
 
-// Any renders an any expression.
-func Any(varDecls Code, formula Code, expression Code) *Statement {
-	return newStatement().Any(varDecls, formula, expression)
+// ForAll renders the forall quantifier.
+func ForAll(vars Code, formula1 Code, formula2 Code) *Statement {
+	return newStatement().ForAll(vars, formula1, formula2)
 }
 
-// Any renders an any expression.
-func (g *Group) Any(varDecls Code, formula Code, expression Code) *Statement {
-	s := Any(varDecls, formula, expression)
+// ForAll renders the forall quantifier.
+func (g *Group) ForAll(vars Code, formula1 Code, formula2 Code) *Statement {
+	s := ForAll(vars, formula1, formula2)
 	g.items = append(g.items, s)
 	return s
 }
 
-// Any renders an any expression.
-func (s *Statement) Any(varDecls Code, formula Code, expression Code) *Statement {
+// ForAll renders the forall quantifier.
+func (s *Statement) ForAll(vars Code, formula1 Code, formula2 Code) *Statement {
 	g := &Group{
 		close:     ")",
-		items:     []Code{varDecls, formula, expression},
+		items:     []Code{vars, formula1, formula2},
 		multi:     true,
-		name:      "any",
-		open:      "any(",
+		name:      "forall",
+		open:      "forall(",
 		separator: " | ",
 	}
+	*s = append(*s, g)
+	return s
+}
+
+// ForEx renders the forex quantifier.
+func ForEx(vars Code, formula1 Code, formula2 Code) *Statement {
+	return newStatement().ForEx(vars, formula1, formula2)
+}
+
+// ForEx renders the forex quantifier.
+func (g *Group) ForEx(vars Code, formula1 Code, formula2 Code) *Statement {
+	s := ForEx(vars, formula1, formula2)
+	g.items = append(g.items, s)
+	return s
+}
+
+// ForEx renders the forex quantifier.
+func (s *Statement) ForEx(vars Code, formula1 Code, formula2 Code) *Statement {
+	g := &Group{
+		close:     ")",
+		items:     []Code{vars, formula1, formula2},
+		multi:     true,
+		name:      "forex",
+		open:      "forex(",
+		separator: " | ",
+	}
+	*s = append(*s, g)
+	return s
+}
+
+// From renders the from quantifier.
+func From(vars ...Code) *Statement {
+	return newStatement().From(vars...)
+}
+
+// From renders the from quantifier.
+func (g *Group) From(vars ...Code) *Statement {
+	s := From(vars...)
+	g.items = append(g.items, s)
+	return s
+}
+
+// From renders the from quantifier.
+func (s *Statement) From(vars ...Code) *Statement {
+	g := &Group{
+		close:     "",
+		items:     vars,
+		multi:     false,
+		name:      "from",
+		open:      "from ",
+		separator: ", ",
+	}
+	*s = append(*s, g)
+	return s
+}
+
+// FromFunc renders the from quantifier.
+func FromFunc(f func(*Group)) *Statement {
+	return newStatement().FromFunc(f)
+}
+
+// FromFunc renders the from quantifier.
+func (g *Group) FromFunc(f func(*Group)) *Statement {
+	s := FromFunc(f)
+	g.items = append(g.items, s)
+	return s
+}
+
+// FromFunc renders the from quantifier.
+func (s *Statement) FromFunc(f func(*Group)) *Statement {
+	g := &Group{
+		close:     "",
+		multi:     false,
+		name:      "from",
+		open:      "from ",
+		separator: ", ",
+	}
+	f(g)
 	*s = append(*s, g)
 	return s
 }
@@ -1828,31 +1126,6 @@ func (s *Statement) Implies() *Statement {
 	return s
 }
 
-// From renders the from keyword.
-func From() *Statement {
-	// notest
-	return newStatement().From()
-}
-
-// From renders the from keyword.
-func (g *Group) From() *Statement {
-	// notest
-	s := From()
-	g.items = append(g.items, s)
-	return s
-}
-
-// From renders the from keyword.
-func (s *Statement) From() *Statement {
-	// notest
-	t := token{
-		content: "from",
-		typ:     keywordToken,
-	}
-	*s = append(*s, t)
-	return s
-}
-
 // Where renders the where keyword.
 func Where() *Statement {
 	// notest
@@ -1997,6 +1270,31 @@ func (s *Statement) Abstract() *Statement {
 	// notest
 	t := token{
 		content: "abstract",
+		typ:     keywordToken,
+	}
+	*s = append(*s, t)
+	return s
+}
+
+// Result renders the result keyword.
+func Result() *Statement {
+	// notest
+	return newStatement().Result()
+}
+
+// Result renders the result keyword.
+func (g *Group) Result() *Statement {
+	// notest
+	s := Result()
+	g.items = append(g.items, s)
+	return s
+}
+
+// Result renders the result keyword.
+func (s *Statement) Result() *Statement {
+	// notest
+	t := token{
+		content: "result",
 		typ:     keywordToken,
 	}
 	*s = append(*s, t)
