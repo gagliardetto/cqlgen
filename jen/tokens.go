@@ -258,7 +258,7 @@ func (s *Statement) Qual(path, name string) *Statement {
 		close: "",
 		items: []Code{
 			token{
-				typ:     packageToken,
+				typ:     identifierToken,
 				content: path,
 			},
 			token{
@@ -268,7 +268,7 @@ func (s *Statement) Qual(path, name string) *Statement {
 		},
 		name:      "qual",
 		open:      "",
-		separator: ".",
+		separator: "::",
 	}
 	*s = append(*s, g)
 	return s

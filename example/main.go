@@ -27,7 +27,7 @@ func main() {
 	f.Doc("Doc about this module.")
 	f.Private().Module().Id("SomeFramework").BlockFunc(func(modGr *Group) {
 		modGr.Doc("Doc about class")
-		modGr.Private().Class().Id("UntrustedSource").Extends().List(Id("UntrustedFlowSource::Range")).
+		modGr.Private().Class().Id("UntrustedSource").Extends().List(Qual("UntrustedFlowSource", "Range")).
 			BlockFunc(func(classGr *Group) {
 				classGr.Id("UntrustedSource").Call().BlockFunc(func(metGr *Group) {
 					metGr.Comment("Example block 1: the type is a function.")
@@ -39,7 +39,7 @@ func main() {
 						par.Exists(
 							List(
 								Id("Function").Id("fn"),
-								Id("DataFlow::CallNode").Id("call"),
+								Qual("DataFlow", "CallNode").Id("call"),
 							),
 							DoGroup(func(st *Group) {
 								st.Id("fn").Dot("hasQualifiedName").Call(Lit("github.com/example/package"), Lit("GetSomething"))
@@ -59,7 +59,7 @@ func main() {
 						par.Exists(
 							List(
 								Id("Function").Id("fn"),
-								Id("DataFlow::CallNode").Id("call"),
+								Qual("DataFlow", "CallNode").Id("call"),
 							),
 							DoGroup(func(st *Group) {
 								st.Id("fn").Dot("hasQualifiedName").Call(Lit("github.com/example/package"), Lit("ParseSomething"))
@@ -69,7 +69,7 @@ func main() {
 
 								st.Id("call").Eq().Id("fn").Dot("getACall").Call().
 									And().
-									This().Eq().Id("FunctionOutput::parameter").Call(Lit(0)).Dot("getExitNode").Call(Id("call"))
+									This().Eq().Qual("FunctionOutput", "parameter").Call(Lit(0)).Dot("getExitNode").Call(Id("call"))
 							}),
 						)
 					})
@@ -92,7 +92,7 @@ func main() {
 								st.Comment("Method calls on `Context`:")
 								st.Exists(
 									List(
-										Id("DataFlow::MethodCallNode").Id("call"),
+										Qual("DataFlow", "MethodCallNode").Id("call"),
 										String().Id("methodName"),
 									),
 									DoGroup(func(st *Group) {
@@ -111,7 +111,7 @@ func main() {
 													This().Eq().Id("call").Dot("getResult").Call(Lit(0)),
 													Or(),
 													Comment("The source is method call parameter #0:"),
-													This().Eq().Id("FunctionOutput::parameter").Call(Lit(0)).Dot("getExitNode").Call(Id("call")),
+													This().Eq().Qual("FunctionOutput", "parameter").Call(Lit(0)).Dot("getExitNode").Call(Id("call")),
 												)
 
 												par.Or()
@@ -127,7 +127,7 @@ func main() {
 								st.Comment("Field reads on `Context`:")
 								st.Exists(
 									List(
-										Id("DataFlow::Field").Id("fld"),
+										Qual("DataFlow", "Field").Id("fld"),
 										String().Id("fieldName"),
 									),
 									DoGroup(func(st *Group) {
@@ -149,7 +149,7 @@ func main() {
 						par.Comment("Struct: github.com/example/package.SomeStruct")
 						par.Exists(
 							List(
-								Id("DataFlow::Field").Id("fld"),
+								Qual("DataFlow", "Field").Id("fld"),
 								String().Id("fieldName"),
 							),
 							DoGroup(func(st *Group) {
@@ -181,7 +181,7 @@ func main() {
 
 							st.Exists(
 								List(
-									Id("DataFlow::MethodCallNode").Id("call"),
+									Qual("DataFlow", "MethodCallNode").Id("call"),
 									String().Id("methodName"),
 								),
 								DoGroup(func(st *Group) {
@@ -201,7 +201,7 @@ func main() {
 											par.Id("methodName").Eq().Lit("ParseHeader")
 											par.And()
 											par.Comment("The source is method call parameter #1:")
-											par.This().Eq().Id("FunctionOutput::parameter").Call(Lit(1)).Dot("getExitNode").Call(Id("call"))
+											par.This().Eq().Qual("FunctionOutput", "parameter").Call(Lit(1)).Dot("getExitNode").Call(Id("call"))
 
 										},
 									)
@@ -224,7 +224,7 @@ func main() {
 
 							st.Exists(
 								List(
-									Id("DataFlow::MethodCallNode").Id("call"),
+									Qual("DataFlow", "MethodCallNode").Id("call"),
 									String().Id("methodName"),
 								),
 								DoGroup(func(st *Group) {
@@ -246,7 +246,7 @@ func main() {
 											par.Id("methodName").Eq().Lit("UnmarshalSomething")
 											par.And()
 											par.Comment("The source is method call parameter #2:")
-											par.This().Eq().Id("FunctionOutput::parameter").Call(Lit(2)).Dot("getExitNode").Call(Id("call"))
+											par.This().Eq().Qual("FunctionOutput", "parameter").Call(Lit(2)).Dot("getExitNode").Call(Id("call"))
 
 										},
 									)
@@ -263,7 +263,7 @@ func main() {
 					metGr.Comment("Type: github.com/example/package.Slice")
 					metGr.Exists(
 						List(
-							Id("DataFlow::ReadNode").Id("read"),
+							Qual("DataFlow", "ReadNode").Id("read"),
 							Id("ValueEntity").Id("v"),
 						),
 						DoGroup(func(st *Group) {
