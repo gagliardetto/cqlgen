@@ -285,6 +285,24 @@ func main() {
 				})
 			})
 	}).Line()
+
+	/*
+		f.From(String().Id("i"), String().Id("b"))
+		f.Where(DoGroup(func(gr *Group) {
+			gr.Id("i").Eq().Lit("hello")
+
+			gr.Or()
+
+			gr.ParensFunc(func(gr *Group) {
+				gr.Id("i").Eq().Lit("foo")
+				gr.Or()
+				gr.Id("i").Eq().Lit("bar")
+
+			})
+		}))
+		f.Select(Id("i"), Lit("this is the result"))
+	*/
+
 	utilz.Q(f)
 	fmt.Printf("\n\n%#v", f)
 }
