@@ -24,6 +24,12 @@ func main() {
 		)
 	*/
 
+	/*
+		f.Predicate().Id("hello").Parens(String().Id("thing")).Block(
+			Id("thing").Eq().Lit("world"),
+		)
+	*/
+
 	f.Doc("Doc about this module.")
 	f.Private().Module().Id("SomeFramework").BlockFunc(func(modGr *Group) {
 		modGr.Doc("Doc about class")
