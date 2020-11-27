@@ -201,7 +201,7 @@ func (s *Statement) DontCare() *Statement {
 	return s.Add(DontCare())
 }
 
-// Range adds a range expression; e.g. [1 .. 10].
+// Range adds a range expression; e.g. [-3 .. 10].
 // The parameters must be literals of int, float, or date type.
 func Range(from Code, to Code) *Statement {
 	return newStatement().Op("[").Add(from).Op("..").Add(to).Op("]")
