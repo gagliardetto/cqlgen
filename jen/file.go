@@ -30,6 +30,7 @@ type File struct {
 // excluded from the import block.
 type importdef struct {
 	name string
+	as   string
 }
 
 // HeaderDoc adds a comment to the top of the file, above any package
@@ -53,12 +54,12 @@ func (f *File) ImportNames(names []string) {
 	}
 }
 
-// ImportAlias provides the alias for a package path that should be used in the import block. A
-// period can be used to force a dot-import.
 func (f *File) Import(path string) {
 	f.imports[path] = importdef{name: path}
 }
-
+func (f *File) ImportAs(path string, as string) {
+	f.imports[path] = importdef{name: path, as: as}
+}
 func (f *File) isLocal(path string) bool {
 	return f.path == path
 }

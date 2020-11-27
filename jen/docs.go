@@ -4,28 +4,19 @@ import (
 	"io"
 )
 
-// Doc adds a doc. If the provided string contains a newline, the
-// doc is formatted in multiline style. If the doc string starts
-// with "//" or "/*", the automatic formatting is disabled and the string is
-// rendered directly.
+// Doc adds a QLDoc comment.
 func Doc(str ...string) *Statement {
 	return newStatement().Doc(str...)
 }
 
-// Doc adds a doc. If the provided string contains a newline, the
-// doc is formatted in multiline style. If the doc string starts
-// with "//" or "/*", the automatic formatting is disabled and the string is
-// rendered directly.
+// Doc adds a QLDoc comment.
 func (g *Group) Doc(str ...string) *Statement {
 	s := Doc(str...)
 	g.items = append(g.items, s)
 	return s
 }
 
-// Doc adds a doc. If the provided string contains a newline, the
-// doc is formatted in multiline style. If the doc string starts
-// with "//" or "/*", the automatic formatting is disabled and the string is
-// rendered directly.
+// Doc adds a QLDoc comment.
 func (s *Statement) Doc(str ...string) *Statement {
 	c := doc{
 		doc: str,
@@ -43,6 +34,13 @@ func (c doc) isNull(f *File) bool {
 }
 
 func (c doc) render(f *File, w io.Writer, s *Statement) error {
+	//if len(c.doc) == 1 {
+	//	if _, err := w.Write([]byte("/** " + c.doc[0] + " */")); err != nil {
+	//		return err
+	//	}
+	//	return nil
+	//}
+
 	if _, err := w.Write([]byte("/**\n")); err != nil {
 		return err
 	}

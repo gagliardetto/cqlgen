@@ -119,9 +119,15 @@ func commandExists(cmd string) bool {
 
 func (f *File) renderImports(source io.Writer) error {
 
-	for path := range f.imports {
-		if _, err := fmt.Fprintf(source, "import %s\n", path); err != nil {
-			return err
+	for path, imp := range f.imports {
+		if imp.as != "" {
+			if _, err := fmt.Fprintf(source, "import %s as %s\n", path, imp.as); err != nil {
+				return err
+			}
+		} else {
+			if _, err := fmt.Fprintf(source, "import %s\n", path); err != nil {
+				return err
+			}
 		}
 	}
 

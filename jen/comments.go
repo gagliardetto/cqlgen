@@ -6,12 +6,15 @@ import (
 	"strings"
 )
 
+// TODO: add comments of this kind???: /** This is a comment. */
+
 // Comment adds a comment. If the provided string contains a newline, the
 // comment is formatted in multiline style. If the comment string starts
 // with "//" or "/*", the automatic formatting is disabled and the string is
 // rendered directly.
 func Comment(str string) *Statement {
-	return newStatement().Comment(str)
+	// TODO: add a final newline?
+	return newStatement().Comment(str).Line()
 }
 
 // Comment adds a comment. If the provided string contains a newline, the

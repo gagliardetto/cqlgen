@@ -162,7 +162,7 @@ func render(w io.Writer) error {
 	for i, t := range tokens {
 		t := t // used in closures
 		comment := Commentf(
-			"%s renders the %s %s.",
+			"%s renders the `%s` %s.",
 			t.name,
 			t.token,
 			t.tokenDesc,
