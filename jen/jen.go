@@ -4,9 +4,12 @@ package jen
 import (
 	"bytes"
 	"fmt"
-	"go/format"
 	"io"
 	"io/ioutil"
+	"log"
+	"os"
+	"os/exec"
+	"path/filepath"
 )
 
 // Code represents an item of code that can be rendered.
@@ -62,20 +65,56 @@ func (f *File) Render(w io.Writer) error {
 	if _, err := source.Write(body.Bytes()); err != nil {
 		return err
 	}
-	// TODO: format using codeql cli.
+
+	// If codeql is installed, then use it to format the source:
+	codeqlCliExists := commandExists("codeql")
+	if codeqlCliExists {
+		// Create a temporary file:
+		tmpFile, err := ioutil.TempFile("", "cqlgen.*.ql")
+		if err != nil {
+			log.Fatal(err)
+		}
+		defer os.Remove(tmpFile.Name())
+
+		// Write source to the temporary file:
+		if _, err := tmpFile.Write(source.Bytes()); err != nil {
+			return err
+		}
+
+		// Get absolute path to temporary file:
+		tmpFileAbsPath, err := filepath.Abs(tmpFile.Name())
+		if err != nil {
+			return err
+		}
+
+		// Format temporary file:
+		output, err := exec.Command("codeql", "query", "format", "-qq", "-i", tmpFileAbsPath).CombinedOutput()
+		if err != nil {
+			os.Stderr.WriteString(err.Error())
+		}
+		fmt.Println(string(output))
+
+		// Read formatted file:
+		formatted, err := ioutil.ReadFile(tmpFileAbsPath)
+		if err != nil {
+			return err
+		}
+		// Write formatted source to destination:
+		if _, err := w.Write(formatted); err != nil {
+			return err
+		}
+		return nil
+	}
 	if _, err := w.Write(source.Bytes()); err != nil {
 		return err
 	}
 	return nil
+}
 
-	formatted, err := format.Source(source.Bytes())
-	if err != nil {
-		return fmt.Errorf("Error %s while formatting source:\n%s", err, source.String())
-	}
-	if _, err := w.Write(formatted); err != nil {
-		return err
-	}
-	return nil
+// Check whether a command exists.
+func commandExists(cmd string) bool {
+	_, err := exec.LookPath(cmd)
+	return err == nil
 }
 
 func (f *File) renderImports(source io.Writer) error {
