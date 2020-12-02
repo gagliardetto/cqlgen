@@ -245,3 +245,20 @@ func (g *Group) Join(separator Code, elems ...Code) *Statement {
 func (s *Statement) Join(separator Code, elems ...Code) *Statement {
 	return s.Add(Join(separator, elems...))
 }
+
+func IntsToSet(elems ...int) *Statement {
+	lits := make([]Code, 0)
+	for _, elem := range elems {
+		lits = append(lits, Lit(elem))
+	}
+
+	return Set(lits...)
+}
+func StringsToSet(elems ...string) *Statement {
+	lits := make([]Code, 0)
+	for _, elem := range elems {
+		lits = append(lits, Lit(elem))
+	}
+
+	return Set(lits...)
+}
