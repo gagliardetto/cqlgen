@@ -246,6 +246,7 @@ func (s *Statement) Join(separator Code, elems ...Code) *Statement {
 	return s.Add(Join(separator, elems...))
 }
 
+// IntsToSet returns a set literal composed of the given elements.
 func IntsToSet(elems ...int) *Statement {
 	lits := make([]Code, 0)
 	for _, elem := range elems {
@@ -254,6 +255,17 @@ func IntsToSet(elems ...int) *Statement {
 
 	return Set(lits...)
 }
+
+// IntsToSetOrLit returns a literal if there's only one element provided,
+// or a set literal if there are more than one provided elements.
+func IntsToSetOrLit(elems ...int) *Statement {
+	if len(elems) == 1 {
+		return Lit(elems[0])
+	}
+	return IntsToSet(elems...)
+}
+
+// StringsToSet returns a set literal composed of the given elements.
 func StringsToSet(elems ...string) *Statement {
 	lits := make([]Code, 0)
 	for _, elem := range elems {
@@ -261,4 +273,13 @@ func StringsToSet(elems ...string) *Statement {
 	}
 
 	return Set(lits...)
+}
+
+// StringsToSetOrLit returns a literal if there's only one element provided,
+// or a set literal if there are more than one provided elements.
+func StringsToSetOrLit(elems ...string) *Statement {
+	if len(elems) == 1 {
+		return Lit(elems[0])
+	}
+	return StringsToSet(elems...)
 }
