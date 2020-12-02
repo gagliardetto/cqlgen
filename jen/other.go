@@ -214,3 +214,34 @@ func (g *Group) Range(from Code, to Code) *Statement {
 func (s *Statement) Range(from Code, to Code) *Statement {
 	return s.Add(Range(from, to))
 }
+
+// Join joins code with a separator.
+// Before joining, it removes null elements.
+func Join(separator Code, elems ...Code) *Statement {
+	st := newStatement()
+
+	notNullElems := make([]Code, 0)
+	for _, elem := range elems {
+		if elem.isNull(nil) {
+			continue
+		}
+		notNullElems = append(notNullElems, elem)
+	}
+
+	for index, elem := range notNullElems {
+		if index > 0 {
+			st.Add(separator).Add(elem)
+		} else {
+			st.Add(elem)
+		}
+	}
+	return st
+}
+
+func (g *Group) Join(separator Code, elems ...Code) *Statement {
+	return g.Add(Join(separator, elems...))
+}
+
+func (s *Statement) Join(separator Code, elems ...Code) *Statement {
+	return s.Add(Join(separator, elems...))
+}

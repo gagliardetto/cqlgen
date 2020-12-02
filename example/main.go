@@ -30,6 +30,14 @@ func main() {
 		)
 	*/
 
+	/*
+		f.Join(
+			Or(),
+			Id("foo").Eq().Lit("a"),
+			Id("bar").Eq().Lit("b"),
+		)
+	*/
+
 	f.Doc("Doc about this module.")
 	f.Private().Module().Id("SomeFramework").BlockFunc(func(modGr *Group) {
 		modGr.Doc("Doc about class")
