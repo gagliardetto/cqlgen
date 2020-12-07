@@ -190,7 +190,7 @@ func (s *Statement) OrderBy() *Statement {
 
 // DontCare adds a dontcare expression, represented by a  `_`.
 func DontCare() *Statement {
-	return newStatement().Op("_")
+	return newStatement().Id("_")
 }
 
 func (g *Group) DontCare() *Statement {
