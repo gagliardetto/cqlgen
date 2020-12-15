@@ -283,3 +283,21 @@ func StringsToSetOrLit(elems ...string) *Statement {
 	}
 	return StringsToSet(elems...)
 }
+func DoGroup(f func(*Group)) *Statement {
+	g := &Group{
+		close:     "",
+		separator: "",
+		multi:     true,
+	}
+	f(g)
+	s := newStatement()
+	*s = append(*s, g)
+	return s
+}
+func (g *Group) DoGroup(f func(*Group)) *Statement {
+	return g.Add(DoGroup(f))
+}
+
+func (s *Statement) DoGroup(f func(*Group)) *Statement {
+	return s.Add(DoGroup(f))
+}
