@@ -14,7 +14,7 @@ import (
 // rendered directly.
 func Comment(str string) *Statement {
 	// TODO: add a final newline?
-	return newStatement().Comment(str).Line()
+	return newStatement().Comment(str)
 }
 
 // Comment adds a comment. If the provided string contains a newline, the
@@ -36,7 +36,7 @@ func (s *Statement) Comment(str string) *Statement {
 		comment: str,
 	}
 	*s = append(*s, c)
-	return s
+	return s.Line()
 }
 
 // Commentf adds a comment, using a format string and a list of parameters. If
@@ -66,7 +66,7 @@ func (s *Statement) Commentf(format string, a ...interface{}) *Statement {
 		comment: fmt.Sprintf(format, a...),
 	}
 	*s = append(*s, c)
-	return s
+	return s.Line()
 }
 
 type comment struct {
