@@ -3,7 +3,6 @@ package jen
 import (
 	"bytes"
 	"fmt"
-	"go/format"
 	"io"
 )
 
@@ -89,7 +88,7 @@ func (s *Statement) RenderWithFile(writer io.Writer, file *File) error {
 	if err := s.render(file, buf, nil); err != nil {
 		return err
 	}
-	b, err := format.Source(buf.Bytes())
+	b, err := FormatCodeQL(buf.Bytes())
 	if err != nil {
 		return fmt.Errorf("Error %s while formatting source:\n%s", err, buf.String())
 	}
