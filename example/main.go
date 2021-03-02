@@ -1,10 +1,9 @@
 package main
 
 import (
-	"fmt"
+	"os"
 
 	. "github.com/gagliardetto/cqlgen/jen"
-	"github.com/gagliardetto/utilz"
 )
 
 func main() {
@@ -311,6 +310,8 @@ func main() {
 		f.Select(Id("i"), Lit("this is the result"))
 	*/
 
-	utilz.Q(f)
-	fmt.Printf("\n\n%#v", f)
+	// Debug print:
+	//fmt.Printf("\n\n%#v", f)
+
+	f.Render(os.Stdout)
 }
