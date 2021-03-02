@@ -44,6 +44,7 @@ func main() {
 	file.Where(DoGroup(func(gr *Group) {
 		gr.Id("call").Eq().Qual("Builtin", "len").Call().Dot("getACall").Call()
 	}))
+	
 	file.Select(Id("call"))
 
 	file.Render(os.Stdout)
