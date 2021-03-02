@@ -9,4 +9,4 @@ You can find other examples in [/examples/other/go](/examples/other/go).
 
 ## Requirements
 
-To be able to format the generated codeql, you need a recent version of the [codeql cli](https://github.com/github/codeql-cli-binaries/releases) (otherwise it will not be formatted), and have it available as `codeql` in your PATH.
+To allow cqlgen to format the generated codeql, you need a recent version of the [codeql cli](https://github.com/github/codeql-cli-binaries/releases) (otherwise it will not be formatted), and have it available as `codeql` in your PATH.
