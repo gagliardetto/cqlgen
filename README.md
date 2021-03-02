@@ -3,9 +3,9 @@ cqlgen is a code generator for CodeQL, based and converted from the awesome [Jen
 
 ## Examples
 
-See https://github.com/gagliardetto/cqlgen/blob/main/example/main.go for a general example.
+See https://github.com/gagliardetto/cqlgen/blob/main/examples/main.go for a general example.
 
-You can find other examples in [/example/other/go](/example/other/go).
+You can find other examples in [/example/other/go](/examples/other/go).
 
 ## Requirements
 
